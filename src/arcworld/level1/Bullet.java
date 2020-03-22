@@ -10,7 +10,7 @@ public class Bullet{
         int length;                                             //Length of the Bullet.
         long start_time;
         long curr_time;
-        static final long elapsedLimit=5;                      //Specifies when to update the bullet In Milliseconds.
+        static final long elapsedLimit=1;                      //Specifies when to update the bullet In Milliseconds.
         static final int sep=30;                               //Minimum Seperation between the bullets on the same x axis.
         Graphics2D g;                                          //Represents the Graphics object of a BufferedImage
         Level1 panel;

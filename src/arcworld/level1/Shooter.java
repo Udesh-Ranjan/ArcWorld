@@ -57,16 +57,23 @@ public class Shooter{
             else{
                 xVel*=GRAVITY;
             }
-        if(xVel>5){
-            xVel=5;
+        if(xVel>3){
+            xVel=3;
         }
-        if(xVel<-5){
-            xVel=-5;
+        if(xVel<-3){
+            xVel=-3;
         }
         
         top.x+=xVel;
         bottom_right.x+=xVel;
         bottom_left.x+=xVel;
+        
+    }
+    public void setRightAccel(boolean input){
+        rightAccel = input;
+    }
+    public void setLeftAccel(boolean input){
+        leftAccel=input;
     }
     public void drawShooter(Graphics g){
         
@@ -78,12 +85,6 @@ public class Shooter{
     }
     public void initTail(){
         tail_length=Math.abs(rnd.nextInt())%16;
-    }
-    public void setRightAccel(boolean input){
-        rightAccel = input;
-    }
-    public void setLeftAccel(boolean input){
-        leftAccel=input;
     }
     
 //    @Override

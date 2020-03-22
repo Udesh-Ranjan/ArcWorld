@@ -187,18 +187,26 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
             return;
         /////////////Move Shooter Right Side/////////////
         if(e.getKeyCode()==KeyEvent.VK_RIGHT){
-            for(int i=0;i<val.length;i++)
-                val[i]=RIGHT;
+//            for(int i=0;i<val.length;i++)
+//                val[i]=RIGHT;
+            shoot.setRightAccel(true);
         }
         /////////////Move Shooter Left Side/////////////
         if(e.getKeyCode()==KeyEvent.VK_LEFT){
-            for(int i=0;i<val.length;i++)
-                val[i]=LEFT;
+//            for(int i=0;i<val.length;i++)
+//                val[i]=LEFT;
+            shoot.setLeftAccel(true);
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+        if(e.getKeyCode()==KeyEvent.VK_RIGHT){
+            shoot.setRightAccel(false);
+        }
+        if(e.getKeyCode()==KeyEvent.VK_LEFT){
+            shoot.setLeftAccel(false);
+        }
     }
     @Override
     public void paint(Graphics g){
@@ -209,7 +217,13 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
     public void run(){
         //////////Game Starts//////////
         for(;;){
-            if(true){             
+            if(true){    
+                
+                Color col=g.getColor();
+                g.setColor(Color.BLACK);
+                g.fillRect(0,0,getWidth(),getHeight());
+                g.setColor(col);
+                
                 if(wayClear()){
                     createAstroid();
                     //debug.println(list_astroid.size());
@@ -232,50 +246,53 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
                     bullet.curr_time=System.currentTimeMillis();
                 }
                 /////////////Moves Shooter On The Axis/////////////
-                for(int i=0;i<val.length;i++){
-                    if(val[i]==LEFT){
-    //                    synchronized(g){
-    //                        Color back=this.getBackground();
-    //                        Color front=g.getColor();
-                            g.setColor(back);
-    //                        g.fillRect(shoot.startx, shoot.starty, shoot.width, shoot.height);
-                            shoot.drawShooter(g);
-                            g.setColor(front);
-                            shoot.top.x--;
-                            shoot.bottom_right.x--;
-                            shoot.bottom_left.x--;
-                            
-                            shoot.initTail();
-                            shoot.drawShooter(g);
-    //                        g.fillRect(shoot.startx, shoot.starty,shoot.width , shoot.height);
-                            //g.drawImage(img, 0,0, this);
-                            repaint();
-                            val[i]=RESET;
-    //                    }
-                    }
-                    else
-                        if(val[i]==RIGHT){
-    //                        synchronized(g){
-    //                            Color back=this.getBackground();
-    //                            Color front=g.getColor();
-                                g.setColor(back);
-    //                            g.fillRect(shoot.startx, shoot.starty, shoot.width, shoot.height);
-                                shoot.drawShooter(g);
-                                g.setColor(front);
-                                
-                                shoot.top.x++;
-                                shoot.bottom_right.x++;
-                                shoot.bottom_left.x++;
-                                
-                                shoot.initTail();
-                                shoot.drawShooter(g);
-    //                            g.fillRect(shoot.startx, shoot.starty,shoot.width , shoot.height);
-                                //g.drawImage(img, 0,0, this);
-                                repaint();
-                                val[i]=RESET;
-    //                        }
-                        }
-                }
+//                for(int i=0;i<val.length;i++){
+//                    if(val[i]==LEFT){
+//    //                    synchronized(g){
+//    //                        Color back=this.getBackground();
+//    //                        Color front=g.getColor();
+//                            g.setColor(back);
+//    //                        g.fillRect(shoot.startx, shoot.starty, shoot.width, shoot.height);
+//                            shoot.drawShooter(g);
+//                            g.setColor(front);
+//                            shoot.top.x--;
+//                            shoot.bottom_right.x--;
+//                            shoot.bottom_left.x--;
+//                            
+//                            shoot.initTail();
+//                            shoot.drawShooter(g);
+//    //                        g.fillRect(shoot.startx, shoot.starty,shoot.width , shoot.height);
+//                            //g.drawImage(img, 0,0, this);
+//                            repaint();
+//                            val[i]=RESET;
+//    //                    }
+//                    }
+//                    else
+//                        if(val[i]==RIGHT){
+//    //                        synchronized(g){
+//    //                            Color back=this.getBackground();
+//    //                            Color front=g.getColor();
+//                                g.setColor(back);
+//    //                            g.fillRect(shoot.startx, shoot.starty, shoot.width, shoot.height);
+//                                shoot.drawShooter(g);
+//                                g.setColor(front);
+//                                
+//                                shoot.top.x++;
+//                                shoot.bottom_right.x++;
+//                                shoot.bottom_left.x++;
+//                                
+//                                shoot.initTail();
+//                                shoot.drawShooter(g);
+//    //                            g.fillRect(shoot.startx, shoot.starty,shoot.width , shoot.height);
+//                                //g.drawImage(img, 0,0, this);
+//                                repaint();
+//                                val[i]=RESET;
+//    //                        }
+//                        }
+//                }
+                shoot.move();
+                shoot.drawShooter(g);
+                
                 for(int i=0;i<list_bullet.size();i++){
                     Bullet bullet=list_bullet.get(i);
                     
@@ -312,7 +329,7 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
                     /////////Refreshing Bullets/////////
                     if(bullet.curr_time-bullet.start_time>=bullet.elapsedLimit){
                         //System.out.println(bullet.start_time+" "+bullet.curr_time+" "+(bullet.curr_time-bullet.start_time));
-                        bullet.clearBullet();
+                        //bullet.clearBullet();
                         bullet.starty--;
                         bullet.start_time=System.currentTimeMillis();
                     }
@@ -327,7 +344,7 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
                         continue;
                     }
                     if(Math.abs(ast.curr_time-ast.start_time)>=Astroid.elapsedtime){
-                        ast.clearAstroid();
+                       //ast.clearAstroid();
                         ast.fall();
                         ast.drawAstroid();
                         ast.start_time=ast.curr_time=System.currentTimeMillis();
@@ -339,7 +356,7 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
                 repaint();
                 /////////Game Refresh Rate/////////
                 try {
-                    Thread.sleep(1);
+                    Thread.sleep(5);
                 } catch (InterruptedException ex) {
                 }
             }
