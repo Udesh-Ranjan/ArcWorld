@@ -57,11 +57,12 @@ public class Shooter{
             else{
                 xVel*=GRAVITY;
             }
-        if(xVel>3){
-            xVel=3;
-        }
+        
         if(xVel<-3){
             xVel=-3;
+        }
+        if(xVel>3){
+            xVel=3;
         }
         
         top.x+=xVel;

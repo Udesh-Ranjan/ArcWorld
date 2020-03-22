@@ -183,29 +183,26 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if(!game_status)
-            return;
+        
         /////////////Move Shooter Right Side/////////////
-        if(e.getKeyCode()==KeyEvent.VK_RIGHT){
-//            for(int i=0;i<val.length;i++)
-//                val[i]=RIGHT;
-            shoot.setRightAccel(true);
-        }
-        /////////////Move Shooter Left Side/////////////
         if(e.getKeyCode()==KeyEvent.VK_LEFT){
-//            for(int i=0;i<val.length;i++)
-//                val[i]=LEFT;
             shoot.setLeftAccel(true);
         }
+        if(e.getKeyCode()==KeyEvent.VK_RIGHT){
+            shoot.setRightAccel(true);
+        }
+        
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if(e.getKeyCode()==KeyEvent.VK_RIGHT){
-            shoot.setRightAccel(false);
-        }
+        
         if(e.getKeyCode()==KeyEvent.VK_LEFT){
             shoot.setLeftAccel(false);
+        }
+        
+        if(e.getKeyCode()==KeyEvent.VK_RIGHT){
+            shoot.setRightAccel(false);
         }
     }
     @Override
@@ -292,6 +289,7 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
 //                }
                 shoot.move();
                 shoot.drawShooter(g);
+                System.out.println(shoot.xVel);
                 
                 for(int i=0;i<list_bullet.size();i++){
                     Bullet bullet=list_bullet.get(i);
