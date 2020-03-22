@@ -14,8 +14,6 @@ import java.awt.image.BufferedImage;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -25,9 +23,6 @@ import java.util.logging.Logger;
  * MAY THESE COMMANDS LIVE LONG.
  */
 public class Level1 extends JPanel implements KeyListener,Runnable,WindowListener{
-    final static byte RESET=0;
-    final static byte LEFT=1;
-    final static byte RIGHT=2;
     boolean game_status;
     
     @Override
@@ -69,8 +64,6 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
     Graphics2D g;                                              //Reference to the below img.
     BufferedImage img;                                         //Art work done on this.
     Shooter shoot;                                             //It fires.
-    int count=20;                                              //# of pixels to slide on x axis on a single left or right key stroke.
-    Byte val[];                                                //Length is count 1 represents Left-Key stroke & 2 represents Right-Key stroke.
     ArrayList<Bullet>list_bullet=new ArrayList<Bullet>();             //Stores the bullets.
     JFrame frame;
     ArrayList<Astroid>list_astroid;
@@ -88,11 +81,8 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
         back=bck;
 //        System.out.println(front);
 //        System.out.println(back);
-        val=new Byte[count];
         list_bullet=new ArrayList<>();
         list_astroid=new ArrayList<>();
-        for(int i=0;i<val.length;i++)
-            val[i]=RESET;
         game_status=true;
         rnd=new Random();
         debug=System.out;
@@ -134,7 +124,8 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
                 int max_y=ast.maxY();
                 
                 if(prev_max_x+sep_x>=frame.getWidth()-200){
-                    screen_available=false;break;
+                    screen_available=false;
+                    break;
                 }
                 for(int j=0;j<ast.points.size();j++){
                     ast.points.get(j).x+=(sep_x+prev_max_x);
@@ -158,8 +149,7 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
     }
     @Override
     public void keyTyped(KeyEvent e) {
-        if(!game_status)
-            return;
+
         ////////////Firing//////////////
         if(e.getKeyChar()=='f'){
             int len=10;
@@ -243,53 +233,8 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
                     bullet.curr_time=System.currentTimeMillis();
                 }
                 /////////////Moves Shooter On The Axis/////////////
-//                for(int i=0;i<val.length;i++){
-//                    if(val[i]==LEFT){
-//    //                    synchronized(g){
-//    //                        Color back=this.getBackground();
-//    //                        Color front=g.getColor();
-//                            g.setColor(back);
-//    //                        g.fillRect(shoot.startx, shoot.starty, shoot.width, shoot.height);
-//                            shoot.drawShooter(g);
-//                            g.setColor(front);
-//                            shoot.top.x--;
-//                            shoot.bottom_right.x--;
-//                            shoot.bottom_left.x--;
-//                            
-//                            shoot.initTail();
-//                            shoot.drawShooter(g);
-//    //                        g.fillRect(shoot.startx, shoot.starty,shoot.width , shoot.height);
-//                            //g.drawImage(img, 0,0, this);
-//                            repaint();
-//                            val[i]=RESET;
-//    //                    }
-//                    }
-//                    else
-//                        if(val[i]==RIGHT){
-//    //                        synchronized(g){
-//    //                            Color back=this.getBackground();
-//    //                            Color front=g.getColor();
-//                                g.setColor(back);
-//    //                            g.fillRect(shoot.startx, shoot.starty, shoot.width, shoot.height);
-//                                shoot.drawShooter(g);
-//                                g.setColor(front);
-//                                
-//                                shoot.top.x++;
-//                                shoot.bottom_right.x++;
-//                                shoot.bottom_left.x++;
-//                                
-//                                shoot.initTail();
-//                                shoot.drawShooter(g);
-//    //                            g.fillRect(shoot.startx, shoot.starty,shoot.width , shoot.height);
-//                                //g.drawImage(img, 0,0, this);
-//                                repaint();
-//                                val[i]=RESET;
-//    //                        }
-//                        }
-//                }
                 shoot.move();
                 shoot.drawShooter(g);
-                System.out.println(shoot.xVel);
                 
                 for(int i=0;i<list_bullet.size();i++){
                     Bullet bullet=list_bullet.get(i);
@@ -303,10 +248,10 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
                                     Thread t=new Thread(game_sound);
                                     t.start();
                                     
-                                    ast.clearAstroid();
+                                    //ast.clearAstroid();
                                     list_astroid.remove(j);
                                     j--;
-                                    bullet.clearBullet();
+                                    //bullet.clearBullet();
                                     if(list_bullet.size()>i){
                                         try {
                                             list_bullet.remove(i);
@@ -325,10 +270,10 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
                     
                     
                     /////////Refreshing Bullets/////////
-                    if(bullet.curr_time-bullet.start_time>=bullet.elapsedLimit){
+                    if(bullet.curr_time-bullet.start_time>=Bullet.elapsedLimit){
                         //System.out.println(bullet.start_time+" "+bullet.curr_time+" "+(bullet.curr_time-bullet.start_time));
                         //bullet.clearBullet();
-                        bullet.starty--;
+                        bullet.starty-=3;
                         bullet.start_time=System.currentTimeMillis();
                     }
                 }
@@ -343,8 +288,10 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
                     }
                     if(Math.abs(ast.curr_time-ast.start_time)>=Astroid.elapsedtime){
                        //ast.clearAstroid();
-                        ast.fall();
+                        ast.panel.g.setColor(ast.front);
                         ast.drawAstroid();
+                        ast.panel.g.setColor(this.front);
+                        ast.fall();
                         ast.start_time=ast.curr_time=System.currentTimeMillis();
                     }
                     else
@@ -354,8 +301,9 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
                 repaint();
                 /////////Game Refresh Rate/////////
                 try {
-                    Thread.sleep(5);
+                    Thread.sleep(10);
                 } catch (InterruptedException ex) {
+                    debug.println(ex);
                 }
             }
         }
