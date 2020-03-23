@@ -71,7 +71,6 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
     Color back;
     Random rnd;
     GameSound game_sound;
-    
     int astroids_destroyed=0;
     
     public Level1(int width,int height,JFrame frm,Color frnt,Color bck){

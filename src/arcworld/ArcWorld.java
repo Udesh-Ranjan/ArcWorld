@@ -28,14 +28,14 @@ public class ArcWorld extends JFrame implements Runnable{
     }
     public void paint(Graphics g){
         g.setColor(Color.black);
-        g.fillRect(0,0,1000,700);
+        g.fillRect(0,0,700,700);
     }
     @Override
     public void run() {
         //////////Level1/////////
         setBackground(Color.black);
         setForeground(Color.cyan);
-        level1=new Level1(900,700,this,getForeground(),getBackground());
+        level1=new Level1(700,700,this,getForeground(),getBackground());
         addKeyListener(level1);
         addWindowListener(level1);
         level1.setBounds(0, 0, 700, 700);
