@@ -1,5 +1,4 @@
 package level2;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -19,13 +18,15 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
 
     BufferedImage img;
     Graphics g;
-    Astroid ast;
+    Astroid ast1,ast2,ast3;
     public Level2(JFrame frame) {
         this.setSize(frame.getSize());
         frame.addKeyListener(this);
         img=new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         g=img.getGraphics();
-        ast=new Astroid(Astroid.map.get(1), (Graphics2D) g, this, img,this.getWidth()/2,this.getHeight()/2);
+        ast1=new Astroid(Astroid.map.get(1), (Graphics2D) g, this, img,this.getWidth()/2,this.getHeight()/2);
+        ast2=new Astroid(Astroid.map.get(1), (Graphics2D) g, this, img,this.getWidth()/2,this.getHeight()/2);
+        ast3=new Astroid(Astroid.map.get(1), (Graphics2D) g, this, img,this.getWidth()/2,this.getHeight()/2);
     }
 
     @Override
@@ -34,8 +35,14 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             g.setColor(Color.black);
             g.fillRect(0,0,getWidth(), getHeight());
             g.setColor(Color.red);
-            ast.drawAstroid();
-            ast.move();
+            ast1.drawAstroid();
+            ast1.move();
+            ast2.drawAstroid();
+            ast2.move();
+            ast3.drawAstroid();
+            ast3.move();
+            
+
             ///////Game Refresh Rate///////
             repaint();
             try {
@@ -83,6 +90,4 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             Logger.getLogger(Level2.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-
 }
