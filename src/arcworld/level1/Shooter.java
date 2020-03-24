@@ -25,6 +25,8 @@ public class Shooter{
     
     int tail_length;
     
+    int border=700;
+    
     public Shooter(){
        top=new Point(0,0);
        bottom_left=new Point(0,0);
@@ -70,6 +72,12 @@ public class Shooter{
             bottom_left.x=0;
             top.x=base/2;
             bottom_right.x=base;
+        }
+        
+        if(bottom_right.x>=700){
+            bottom_right.x=700;
+            top.x=bottom_right.x-base/2;
+            bottom_left.x=bottom_right.x-base;
         }
     }
     public void setRightAccel(boolean input){

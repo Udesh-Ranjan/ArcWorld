@@ -1,6 +1,9 @@
 package arcworld.level1;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowListener;
@@ -8,12 +11,17 @@ import java.awt.event.WindowEvent;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -43,21 +51,17 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
 
     @Override
     public void windowIconified(WindowEvent e) {
-        game_status=true;
     }
 
     @Override
     public void windowDeiconified(WindowEvent e) {
-        game_status=false;
     }
 
     @Override
     public void windowActivated(WindowEvent e) {
-        game_status=true;
     }
     @Override
     public void windowDeactivated(WindowEvent e) {
-        game_status=false;
     }
     
     PrintStream debug;                                         //For getting error msg.
@@ -71,9 +75,25 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
     Color back;
     Random rnd;
     GameSound game_sound;
-    int astroids_destroyed=0;
+    int border;
+    Font pixelMplus;
     
-    public Level1(int width,int height,JFrame frm,Color frnt,Color bck){
+    int level=1;
+    int wave=1;
+    int astroids_destroyed=0;
+    int life=3;
+    
+    public Level1(int width,int height,JFrame frm,Color frnt,Color bck,int bod){
+//        try {
+//            pixelMplus=Font.createFont(Font.TRUETYPE_FONT, new File("PixelMplus10-Regular.ttf"));
+//            GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
+//            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("PixelMplus10-Regular.ttf")));
+//        } catch (FontFormatException | IOException ex) {
+//            Logger.getLogger(Level1.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        
+        
+        border=bod+100;
         game_sound=new GameSound();
         frame=frm;
         front=Color.LIGHT_GRAY;
@@ -93,12 +113,13 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
         g.setColor(front);
         shoot=new Shooter(new Point(300,500),new Point(290,530),new Point(310,530));
         shoot.drawShooter(g);
+        
         repaint();
     }
     ///////////Creates Astroids/////////////
-    public synchronized void createAstroid(){
+    public void createAstroid(){
         
-        int number_of_astroids=rnd.nextInt(65326821)%6+1;
+        int number_of_astroids=rnd.nextInt(65326821)%4+1;
         boolean screen_available=true;
         //debug.println(number_of_astroids);
         for(int i=0;screen_available&&i<number_of_astroids;i++){
@@ -122,7 +143,7 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
                 int prev_max_x=prev.maxX();
                 int max_y=ast.maxY();
                 
-                if(prev_max_x+sep_x>=frame.getWidth()-200){
+                if(prev_max_x+sep_x>=border-200){
                     screen_available=false;
                     break;
                 }
@@ -202,7 +223,7 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
     @Override
     public void run(){
         //////////Game Starts//////////
-        for(;;){
+        for(;game_status;){
             if(true){    
                 
                 Color col=g.getColor();
@@ -210,6 +231,56 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
                 g.fillRect(0,0,getWidth(),getHeight());
                 g.setColor(col);
                 
+                g.setColor(Color.yellow);
+                String str="ARCWORLD";
+                Font font=new Font(Font.MONOSPACED, Font.PLAIN, 30);
+                drawStringOnCenter(g, font, border-100, 1000, 20, str);
+                
+                g.setColor(Color.green);
+                str="LEVEL";
+                font=new Font("Monospaced", Font.PLAIN, 15);
+                drawString(g, font,720,50, str);
+                
+                g.setColor(Color.red);
+                str=Integer.toString(level);
+                font=new Font(Font.MONOSPACED, Font.PLAIN, 15);
+                drawString(g, font,930,50, str);
+                
+                
+                g.setColor(Color.green);
+                str="WAVE";
+                font=new Font(Font.MONOSPACED, Font.PLAIN, 15);
+                drawString(g, font,720,100, str);
+                
+                g.setColor(Color.red);
+                str=Integer.toString(wave);
+                font=new Font(Font.MONOSPACED, Font.PLAIN, 15);
+                drawString(g, font,930,100, str);
+                
+                g.setColor(Color.green);
+                str="ASTROID DESTROYED";
+                font=new Font(Font.MONOSPACED, Font.PLAIN, 15);
+                drawString(g, font,720,150, str);
+                
+                g.setColor(Color.red);
+                str=Integer.toString(astroids_destroyed);
+                font=new Font(Font.MONOSPACED, Font.PLAIN, 15);
+                drawString(g, font,930,150, str);
+                
+                g.setColor(Color.green);
+                str="LIFE";
+                font=new Font(Font.MONOSPACED, Font.PLAIN, 15);
+                drawString(g, font,720,200, str);
+                
+                g.setColor(Color.red);
+                str=Integer.toString(life);
+                font=new Font(Font.MONOSPACED, Font.PLAIN, 15);
+                drawString(g, font,930,200, str);
+                
+                if(life<=0){
+                    game_status=false;
+                }
+                    
                 if(wayClear()){
                     createAstroid();
                     //debug.println(list_astroid.size());
@@ -263,6 +334,7 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
                                     
                                     if(astroids_destroyed%10==0){
                                         Astroid.elapsedtime=Math.max(Astroid.elapsedtime-1,1);
+                                        wave++;
                                     }
                                 }
                     }
@@ -281,6 +353,8 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
                 for(int i=0;i<list_astroid.size();i++){
                     Astroid ast=list_astroid.get(i);
                     if(ast.minY()>=this.getHeight()){
+                        life--;
+                        
                         list_astroid.remove(i);
                         i--;
                         continue;
@@ -306,5 +380,21 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
                 }
             }
         }
+    }
+    static void drawStringOnCenter(Graphics g,Font font,int left,int right,int height,String str){
+        Font prev=g.getFont();
+        g.setFont(font);
+        FontMetrics fm=g.getFontMetrics();
+        int size=fm.stringWidth(str);
+        int center =(right+left)/2;
+        g.drawString(str,center-size/2, height);
+        g.setFont(prev);
+    }
+    static void drawString(Graphics g,Font font,int x,int y,String str){
+        Font prev=g.getFont();
+        g.setFont(font);
+        FontMetrics fm=g.getFontMetrics();
+        g.drawString(str, x, y);
+        g.setFont(prev);
     }
 }
