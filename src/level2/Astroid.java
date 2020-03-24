@@ -23,7 +23,6 @@ public class Astroid{
         int xDistance;
         int yDistance;
         
-        
         public _Point(int x, int y) {
             this.x = x;
             this.y = y;
@@ -57,8 +56,7 @@ public class Astroid{
             }
             else{
                 y=centerY+yDistance;
-            }
-            
+            }    
         }
     }
     
@@ -96,6 +94,12 @@ public class Astroid{
     double distanceX;
     double distanceY;
     
+    int leftRadius;
+    int rightRadius;
+    
+    int upperRadius;
+    int lowerRadius;
+    
     Astroid(Integer list[],Graphics2D g,Level2 pnl,BufferedImage img,double centerX,double centerY ){
         this.centerX=centerX;
         this.centerY=centerY;
@@ -113,9 +117,9 @@ public class Astroid{
         status=true;
         
         int sign=((rnd.nextInt())%2)==0?1:-1;
-        nextX=centerX+(rnd.nextInt(11)+10)*sign;
+        nextX=centerX+(rnd.nextInt(51)+10)*sign;
         sign=((rnd.nextInt())%2)==0?1:-1;
-        nextY=centerY+(rnd.nextInt(11)+10)*sign;
+        nextY=centerY+(rnd.nextInt(51)+10)*sign;
         
         slope=(centerY-nextY)/(centerX-nextX);
         distanceX=Math.abs(centerX-nextX);
@@ -123,6 +127,12 @@ public class Astroid{
         changeX=(Math.abs(centerX-nextX)>=Math.abs(centerY-nextY));
         
         initializeOrientation();
+        
+        leftRadius=(int)(centerX-minX());
+        rightRadius=(int)(maxX()-centerX);
+        upperRadius=(int)(centerY-minY());
+        lowerRadius=(int)(maxY()-centerY);
+        
     }
     public void drawAstroid(){
         int count_points=points.size();
@@ -131,7 +141,6 @@ public class Astroid{
             _Point pnt2=points.get(i);
             g.drawLine(pnt1.x, pnt1.y, pnt2.x, pnt2.y);
         }
-
     }
     public void initializeOrientation(){
         for (_Point point : points) {
@@ -145,33 +154,63 @@ public class Astroid{
     }
     public void move() {
         float step=2f;
+        int width=panel.getWidth();
+        int height=panel.getHeight();
+        
         if(changeX){
-            
+            ////////Moving towards left///////////
             if(centerX<nextX){
                 centerX-=step;
                 centerY=slope*(centerX-nextX)+nextY;
+                
+                if(centerX+rightRadius<0){
+                    centerX=width+leftRadius;
+                    centerY=slope*(centerX-width/2)+height/2;
+                }
+                
                 nextX=centerX+distanceX;
                 nextY=(centerY>nextY)?centerY-distanceY:centerY+distanceY;
+                
             }
+            ////////Moving towards right///////////
             else{
                 centerX+=step;
                 centerY=slope*(centerX-nextX)+nextY;
+                
+                if(centerX-leftRadius>width){
+                    centerX=-rightRadius;
+                    centerY=slope*(centerX-width/2)+height/2;
+                }
+                
                 nextX=centerX-distanceX;
                 nextY=(centerY>nextY)?centerY-distanceY:centerY+distanceY;
             }
         }
         else{
-            
+            ////////Moving towards top///////////
             if(centerY<nextY){
                 centerY-=step;
                 centerX=(centerY-nextY)/slope+nextX;
+                
+                if(centerY+lowerRadius<0){
+                    centerY=height+upperRadius;
+                    centerX=(centerY-height/2)/slope+width/2;
+                }
+                
                 nextY=centerY+distanceY;
                 nextX=(centerX<nextX)?centerX+distanceX:centerX-distanceX;
                 
             }
             else{
+            ////////Moving towards bottom///////////
                 centerY+=step;
                 centerX=(centerY-nextY)/slope+nextX;
+                
+                if(centerY-upperRadius>height){
+                    centerY=-lowerRadius;
+                    centerX=(centerY-height/2)/slope+width/2;
+                }
+                
                 nextY=centerY-distanceY;
                 nextX=(centerX<nextX)?centerX+distanceX:centerX-distanceX;
                 
@@ -291,7 +330,8 @@ public class Astroid{
 
             return (count % 2 == 1); 
     }
+    ///////Main Method///////
     public static void main(String $[]){
-
+        
     }
 }
