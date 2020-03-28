@@ -2,7 +2,6 @@ package arcworld.level1;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.KeyListener;
@@ -11,17 +10,12 @@ import java.awt.event.WindowEvent;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

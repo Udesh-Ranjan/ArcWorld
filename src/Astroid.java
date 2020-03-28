@@ -4,7 +4,7 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
-import level2.Level2;
+import arcworld.level2.Level2;
 
 public class Astroid{
     

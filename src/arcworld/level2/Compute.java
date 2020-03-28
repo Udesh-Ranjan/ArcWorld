@@ -1,4 +1,4 @@
-package level2;
+package arcworld.level2;
 
 import java.io.PrintStream;
 import java.util.Scanner;

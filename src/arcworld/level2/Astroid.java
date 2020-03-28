@@ -1,4 +1,4 @@
-package level2;
+package arcworld.level2;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
