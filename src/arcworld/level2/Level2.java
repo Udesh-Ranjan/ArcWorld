@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import arcworld.level2.Bullet._Point;;
 import static arcworld.level2.Shooter.GRAVITY;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -20,26 +21,47 @@ import java.util.ArrayList;
  */
 public abstract class Level2 extends JPanel implements Runnable,KeyListener{
 
+    static final int BIG_ASTROID=1;
+    static final int SMALL_ASTROID=2;
+    
     BufferedImage img;
     Graphics g;
     Astroid ast1,ast2,ast3;
     Shooter shooter;
     
     ArrayList<Bullet>listBullet;
+    ArrayList<Astroid>listAstroid;
+    
+    HashMap<Astroid,Integer>map;
     
     public Level2(JFrame frame) {
         this.setSize(frame.getSize());
         frame.addKeyListener(this);
         img=new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         g=img.getGraphics();
+        map=new HashMap<>();
         ast1=new Astroid(Astroid.map.get(1), (Graphics2D) g, this, img,this.getWidth()/2,this.getHeight()/2);
         ast2=new Astroid(Astroid.map.get(1), (Graphics2D) g, this, img,this.getWidth()/2,this.getHeight()/2);
         ast3=new Astroid(Astroid.map.get(1), (Graphics2D) g, this, img,this.getWidth()/2,this.getHeight()/2);
+        ast1.enabled=true;
+        ast2.enabled=true;
+        ast3.enabled=true;
+        
+        map.put(ast1,BIG_ASTROID);
+        map.put(ast2,BIG_ASTROID);
+        map.put(ast3,BIG_ASTROID);
+        
         shooter=new Shooter(new Shooter._Point(500,350),50, img, g);
+        
         listBullet=new ArrayList<>();
+        listAstroid=new ArrayList<>();
+        
+        listAstroid.add(ast1);
+        listAstroid.add(ast2);
+        listAstroid.add(ast3);
+        
     }
 
-    
     @Override
     public void paint(Graphics g){
         g.drawImage(img, 0, 0, this);
@@ -474,7 +496,13 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
         if(e.getKeyCode()==KeyEvent.VK_F){
             
             Bullet bullet=null;
-            bullet=new Bullet(new Bullet._Point(shooter.cockpit.x,shooter.cockpit.y),new Bullet._Point(shooter.tail.x,shooter.tail.y),g);
+//            bullet=new Bullet(new Bullet._Point(shooter.cockpit.x,shooter.cockpit.y),new Bullet._Point(shooter.tail.x,shooter.tail.y),g);
+            
+            double x=(shooter.cockpit.x+shooter.tail.x)/2;
+            double y=(shooter.cockpit.y+shooter.tail.y)/2;
+            
+            bullet=new Bullet(new Bullet._Point(shooter.cockpit.x,shooter.cockpit.y),new Bullet._Point(x,y),g);
+            
             synchronized(listBullet){
                 listBullet.add(bullet);
             }
@@ -507,7 +535,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
         
         synchronized(listBullet){
             for(Bullet bullet:listBullet){
-            bullet.drawBullet();
+                bullet.drawBullet();
             }
         }
     }
@@ -528,9 +556,49 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             return true;
         }
         
-        
-        
         return false;
+    }
+    public void checkBulletsHitAstroids(){
+        
+        synchronized(listBullet){
+            for(int i=0;i<listBullet.size();i++){
+                Bullet bullet=listBullet.get(i);
+                boolean collision=false;
+                for(int j=0;j<listAstroid.size();j++){
+                    Astroid ast=listAstroid.get(j);
+                    if(Astroid.isInside(ast.points,ast.points.size(),new Astroid._Point((int)bullet.head.x,(int)bullet.head.y)) || Astroid.isInside(ast.points,ast.points.size(),new Astroid._Point((int)bullet.tail.x,(int)bullet.tail.y))){
+                        if(map.get(ast)!=null){
+                            for(int k=0;k<2;k++){
+                                Astroid small=new Astroid(Astroid.map.get(2), (Graphics2D) g, this, img,this.getWidth()/2,this.getHeight()/2);
+                                small.enabled=true;
+                                listAstroid.add(small);
+                            }
+                        }
+                        listAstroid.remove(j);
+                        collision=true;
+                        break;
+                    }
+                }
+                if(collision){
+                    listBullet.remove(i);
+                    i--;
+                }
+            }
+        }
+    }
+    public void moveAstroids(){
+        synchronized(listAstroid){
+            for(Astroid ast: listAstroid){
+                ast.move();
+            }
+        }
+    }
+    public void drawAstroids(){
+        synchronized(listAstroid){
+            for(Astroid ast: listAstroid){
+                ast.drawAstroid();
+            }
+        }
     }
     @Override
     public void run() {
@@ -539,12 +607,8 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             g.fillRect(0,0,getWidth(), getHeight());
             g.setColor(Color.red);
             
-            ast1.move();
-            ast1.drawAstroid();
-            ast2.move();
-            ast2.drawAstroid();
-            ast3.move();
-            ast3.drawAstroid();
+            moveAstroids();
+            drawAstroids();
             
             shooter.move();
             shooter.drawShooter(g);
@@ -552,10 +616,12 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             moveBullets();
             drawBullets();
             
+            checkBulletsHitAstroids();
+
             ///////Game Refresh Rate///////
             repaint();
             try {
-                Thread.sleep(15);
+                Thread.sleep(8);
             }
             catch (InterruptedException ex) {
                 Logger.getLogger(Level2.class.getName()).log(Level.SEVERE, null, ex);
