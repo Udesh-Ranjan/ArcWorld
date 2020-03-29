@@ -75,7 +75,7 @@ public class Astroid{
     long curr_time;
     ArrayList<_Point>points;
     Color front;
-    boolean status;
+    boolean enabled;
     boolean changeX;
     static{
         map=new HashMap<>();
@@ -114,7 +114,7 @@ public class Astroid{
         this.img=img;
         front=Color.cyan;
         start_time=curr_time=System.currentTimeMillis();
-        status=true;
+        enabled=false;
         
         int sign=((rnd.nextInt())%2)==0?1:-1;
         nextX=centerX+(rnd.nextInt(51)+10)*sign;
