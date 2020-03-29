@@ -2,6 +2,7 @@ package arcworld.level1;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.KeyListener;
@@ -10,12 +11,17 @@ import java.awt.event.WindowEvent;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -71,6 +77,9 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
     GameSound game_sound;
     int border;
     Font pixelMplus;
+    Font pixelMplus_20;
+    Font pixelMplus_24;
+    Font pixelMplus_60;
     
     int level=1;
     int wave=1;
@@ -78,16 +87,20 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
     int life=3;
     
     public Level1(int width,int height,JFrame frm,Color frnt,Color bck,int bod){
-//        try {
-//            pixelMplus=Font.createFont(Font.TRUETYPE_FONT, new File("PixelMplus10-Regular.ttf"));
-//            GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
-//            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("PixelMplus10-Regular.ttf")));
-//        } catch (FontFormatException | IOException ex) {
-//            Logger.getLogger(Level1.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        
         
-        border=bod+100;
+        try {
+            pixelMplus=Font.createFont(Font.TRUETYPE_FONT, new File("src\\arcworld\\PixelMplus10-Regular.ttf")).deriveFont(30f);
+            GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src\\arcworld\\PixelMplus10-Regular.ttf")));
+            pixelMplus_20=pixelMplus.deriveFont(20f);
+            pixelMplus_24=pixelMplus.deriveFont(24f);
+            pixelMplus_60=pixelMplus.deriveFont(60f);
+        } catch (FontFormatException | IOException ex) {
+            Logger.getLogger(Level1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        border=bod+70;
         game_sound=new GameSound();
         frame=frm;
         front=Color.LIGHT_GRAY;
@@ -225,51 +238,47 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
                 g.fillRect(0,0,getWidth(),getHeight());
                 g.setColor(col);
                 
-                g.setColor(Color.yellow);
+                g.setColor(new Color(105, 105, 69));
                 String str="ARCWORLD";
-                Font font=new Font(Font.MONOSPACED, Font.PLAIN, 30);
-                drawStringOnCenter(g, font, border-100, 1000, 20, str);
+                drawStringOnCenter(g,pixelMplus_60, border-100, 1000, 50, str);
+                
+                int hstep=50;
                 
                 g.setColor(Color.green);
                 str="LEVEL";
-                font=new Font("Monospaced", Font.PLAIN, 15);
-                drawString(g, font,720,50, str);
+                drawString(g,pixelMplus_20,720,50+hstep, str);
                 
-                g.setColor(Color.red);
+                g.setColor(Color.lightGray);
                 str=Integer.toString(level);
-                font=new Font(Font.MONOSPACED, Font.PLAIN, 15);
-                drawString(g, font,930,50, str);
+                drawString(g,pixelMplus_24,930,50+hstep, str);
                 
                 
                 g.setColor(Color.green);
                 str="WAVE";
-                font=new Font(Font.MONOSPACED, Font.PLAIN, 15);
-                drawString(g, font,720,100, str);
+                drawString(g,pixelMplus_20,720,100+hstep, str);
                 
-                g.setColor(Color.red);
+                g.setColor(Color.lightGray);
                 str=Integer.toString(wave);
-                font=new Font(Font.MONOSPACED, Font.PLAIN, 15);
-                drawString(g, font,930,100, str);
+                drawString(g,pixelMplus_24,930,100+hstep, str);
                 
                 g.setColor(Color.green);
                 str="ASTROID DESTROYED";
-                font=new Font(Font.MONOSPACED, Font.PLAIN, 15);
-                drawString(g, font,720,150, str);
+                drawString(g,pixelMplus_20,720,150+hstep, str);
                 
-                g.setColor(Color.red);
+                g.setColor(Color.lightGray);
                 str=Integer.toString(astroids_destroyed);
-                font=new Font(Font.MONOSPACED, Font.PLAIN, 15);
-                drawString(g, font,930,150, str);
+                drawString(g,pixelMplus_24,930,150+hstep, str);
                 
                 g.setColor(Color.green);
                 str="LIFE";
-                font=new Font(Font.MONOSPACED, Font.PLAIN, 15);
-                drawString(g, font,720,200, str);
+                drawString(g,pixelMplus_20,720,200+hstep, str);
                 
-                g.setColor(Color.red);
+                if(life==1)
+                    g.setColor(new Color(219, 86, 86));
+                else
+                    g.setColor(Color.lightGray);
                 str=Integer.toString(life);
-                font=new Font(Font.MONOSPACED, Font.PLAIN, 15);
-                drawString(g, font,930,200, str);
+                drawString(g,pixelMplus_24,930,200+hstep, str);
                 
                 if(life<=0){
                     game_status=false;
