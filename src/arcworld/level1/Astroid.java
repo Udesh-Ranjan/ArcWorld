@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class Astroid{
     
@@ -30,6 +31,8 @@ public class Astroid{
         ArrayList<Point>points;
         Color front;
         boolean status;
+        int fall;
+        static Random rnd;
         static{
             map=new HashMap<>();
             map.put(1,astroid1_coordinates);
@@ -42,12 +45,14 @@ public class Astroid{
             map.put(8,astroid8_coordinates);
             map.put(9,astroid9_coordinates);
             map.put(10,astroid10_coordinates);
+            rnd=new Random();
         }
         Astroid(Integer list[],Graphics2D g,Level1 pnl,BufferedImage img){
             points=new ArrayList();
             for(int i=0;i<list.length;i+=2){
                 points.add(new Point(list[i],list[i+1]));
             }
+            fall=rnd.nextInt(3)+3;
             this.g=g;
             panel=pnl;
             this.img=img;
@@ -72,7 +77,7 @@ public class Astroid{
 
         public void fall() {
             for (Point point : points) {
-                point.y+=2;                                                      //Incrementing the y position
+                point.y+=fall;                                                      //Incrementing the y position
             }
         }
 
