@@ -14,11 +14,6 @@ import javax.swing.JPanel;
  */
 public class Shooter{
 
-//    @Override
-//    public void keyTyped(KeyEvent e) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-
     static class _Point{
         double x;
         double y;
@@ -37,14 +32,16 @@ public class Shooter{
         }
     }
     
-    static final double GRAVITY=0.94;
-    volatile boolean upKey;
+    static final double LENGTH=50;
+    static final double GRAVITY=0.98;
+    boolean upKey;
     BufferedImage img;
     Graphics g;
-    volatile _Point cockpit;
-    volatile _Point tail;
-    volatile _Point wing1;
-    volatile _Point wing2;
+    _Point cockpit;
+    _Point tail;
+    _Point wing1;
+    _Point wing2;
+    _Point tailEnd;
     static int sleep=10;
     volatile double velocityStep;
     
@@ -79,6 +76,8 @@ public class Shooter{
         wing1=new _Point(tail.x-wingSeperation*2,tail.y);
         wing2=new _Point(tail.x+wingSeperation*2,tail.y);
         
+        tailEnd=new _Point(cockpit.x,cockpit.y+Bullet.LENGTH);
+        
         velocityStep=0;
         upKey=false;
         img=new BufferedImage(1000, 700, BufferedImage.TYPE_4BYTE_ABGR);
@@ -95,6 +94,8 @@ public class Shooter{
         this.g=g;
         wing1=new _Point(tail.x-wingSeperation*2,tail.y);
         wing2=new _Point(tail.x+wingSeperation*2,tail.y);
+        
+        tailEnd=new _Point(cockpit.x,cockpit.y+Bullet.LENGTH);
         
         velocityStep=0;
         upKey=false;
@@ -113,7 +114,7 @@ public class Shooter{
 
         g.drawLine((int)wing2.x,(int)wing2.y,(int)tail.x, (int)tail.y);
         g.drawLine((int)wing2.x,(int)wing2.y,(int)cockpit.x, (int)cockpit.y);
-        
+                
     }
     
 //    @Override
@@ -558,17 +559,19 @@ public class Shooter{
     public void move(){
         
         if(upKey){
-            velocityStep+=0.02;
+            velocityStep+=0.1;
         }
         else{
             velocityStep*=GRAVITY;
-//            velocityStep=0;
         }
         
-        if(velocityStep>1.5){
-            velocityStep=1.5;
+        if(velocityStep>2.5){
+            velocityStep=2.5;
         }
+        double changeLimit=velocityStep+1.5;
+        double cons=0.9999;
         
+        _Point curr_cockpit=new _Point(cockpit);
         //Straight
         if(((int)cockpit.x==(int)tail.x&&cockpit.y<tail.y)){
             
@@ -578,6 +581,7 @@ public class Shooter{
             tail.y-=velocityStep;
             wing1.y-=velocityStep;
             wing2.y-=velocityStep;
+            tailEnd.y-=velocityStep;
         }
         else
             if(cockpit.x>tail.x&&cockpit.y<tail.y){
@@ -587,12 +591,21 @@ public class Shooter{
                 if(delta_x<=delta_y){
             
                     System.out.println("#2");
-
-                    if(cockpit.x-tail.x<=4){
-                        velocityStep*=0.7;
-                    }
-
                     
+                    
+                    curr_cockpit.x+=velocityStep;
+                    curr_cockpit.y-=(delta_y/delta_x)*velocityStep;
+                    
+                    while(Math.abs(curr_cockpit.y-cockpit.y)>changeLimit){
+                        velocityStep*=cons;
+                        
+                        curr_cockpit.x=cockpit.x;
+                        curr_cockpit.y=cockpit.y;
+                        
+                        curr_cockpit.x+=velocityStep;
+                        curr_cockpit.y-=(delta_y/delta_x)*velocityStep;
+                    
+                    }
                     cockpit.x+=velocityStep;
                     cockpit.y-=(delta_y/delta_x)*velocityStep;
                     
@@ -605,16 +618,28 @@ public class Shooter{
                     wing2.x+=velocityStep;
                     wing2.y-=(delta_y/delta_x)*velocityStep;
                     
+                    tailEnd.x+=velocityStep;
+                    tailEnd.y-=(delta_y/delta_x)*velocityStep;
+                    
                 }
                 else{
                     
                     System.out.println("#3");
             
+                    curr_cockpit.y-=velocityStep;
+                    curr_cockpit.x+=(delta_x/delta_y)*velocityStep;
                     
-                    if(tail.y-cockpit.y<=7){
-                        velocityStep*=0.8;
+                    while(Math.abs(curr_cockpit.x-cockpit.x)>changeLimit){
+                        velocityStep*=cons;
+                        
+                        curr_cockpit.x=cockpit.x;
+                        curr_cockpit.y=cockpit.y;
+                        
+                        curr_cockpit.y-=velocityStep;
+                        curr_cockpit.x+=(delta_x/delta_y)*velocityStep;
+                    
                     }
-
+                    
                     cockpit.y-=velocityStep;
                     cockpit.x+=(delta_x/delta_y)*velocityStep;
 
@@ -626,6 +651,9 @@ public class Shooter{
 
                     wing2.y-=velocityStep;
                     wing2.x+=(delta_x/delta_y)*velocityStep;
+                    
+                    tailEnd.y-=velocityStep;
+                    tailEnd.x+=(delta_x/delta_y)*velocityStep;
                 }
 
             }
@@ -638,6 +666,7 @@ public class Shooter{
                 tail.x+=velocityStep;
                 wing1.x+=velocityStep;
                 wing2.x+=velocityStep;
+                tailEnd.x+=velocityStep;
             }
             else
                 if(cockpit.y>tail.y && cockpit.x>tail.x){
@@ -649,33 +678,52 @@ public class Shooter{
                         
                        System.out.println("#5");
                        
-                       if(cockpit.x-tail.x<=7){
-                           velocityStep*=0.8;
+                       curr_cockpit.x+=velocityStep;
+                       curr_cockpit.y+=(delta_y/delta_x)*velocityStep;
+                       
+                       while(Math.abs(curr_cockpit.y-cockpit.y)>changeLimit){
+                           velocityStep*=cons;
+                           
+                           curr_cockpit.x=cockpit.x;
+                           curr_cockpit.y=cockpit.y;
+                           
+                           curr_cockpit.x+=velocityStep;
+                           curr_cockpit.y+=(delta_y/delta_x)*velocityStep;
+
                        }
-                       
-                       
                        
                        cockpit.x+=velocityStep;
                        cockpit.y+=(delta_y/delta_x)*velocityStep;
                        
-                        tail.x+=velocityStep;
-                        tail.y+=(delta_y/delta_x)*velocityStep;
+                       tail.x+=velocityStep;
+                       tail.y+=(delta_y/delta_x)*velocityStep;
 
-                        wing1.x+=velocityStep;
-                        wing1.y+=(delta_y/delta_x)*velocityStep;
+                       wing1.x+=velocityStep;
+                       wing1.y+=(delta_y/delta_x)*velocityStep;
 
-                        wing2.x+=velocityStep;
-                        wing2.y+=(delta_y/delta_x)*velocityStep;
+                       wing2.x+=velocityStep;
+                       wing2.y+=(delta_y/delta_x)*velocityStep;
+
+                       tailEnd.x+=velocityStep;
+                       tailEnd.y+=(delta_y/delta_x)*velocityStep;
                     }
                     else{
                         
                         System.out.println("#6");
                         
-                        if(cockpit.y-tail.y<=9){
-                            velocityStep*=0.8;
+                        curr_cockpit.y+=velocityStep;
+                        curr_cockpit.x+=(delta_x/delta_y)*velocityStep;
+                        
+                        while(Math.abs(curr_cockpit.x-cockpit.x)>changeLimit){
+                            velocityStep*=cons;
+                            
+                            curr_cockpit.x=cockpit.x;
+                            curr_cockpit.y=cockpit.y;
+                            
+                            curr_cockpit.y+=velocityStep;
+                            curr_cockpit.x+=(delta_x/delta_y)*velocityStep;
+                        
                         }
-
-                    
                         cockpit.y+=velocityStep;
                         cockpit.x+=(delta_x/delta_y)*velocityStep;
 
@@ -687,6 +735,9 @@ public class Shooter{
 
                         wing2.y+=velocityStep;
                         wing2.x+=(delta_x/delta_y)*velocityStep;
+                        
+                        tailEnd.y+=velocityStep;
+                        tailEnd.x+=(delta_x/delta_y)*velocityStep;
                     }
                 }
                 else
@@ -698,6 +749,7 @@ public class Shooter{
                         tail.y+=velocityStep;
                         wing1.y+=velocityStep;
                         wing2.y+=velocityStep;     
+                        tailEnd.y+=velocityStep;     
                     }
                     else
                         if(cockpit.x<tail.x && cockpit.y>tail.y){
@@ -707,32 +759,54 @@ public class Shooter{
                             if(delta_x<=delta_y){
                                 
                                 System.out.println("#8");
-            
                                 
-                                if(tail.x-cockpit.x<=6){
-                                    velocityStep*=0.8;
+                                curr_cockpit.x-=velocityStep;
+                                curr_cockpit.y+=(delta_y/delta_x)*velocityStep;
+                                
+                                while(Math.abs(curr_cockpit.y-cockpit.y)>changeLimit){
+                                    velocityStep*=cons;
+                                    
+                                    curr_cockpit.x=cockpit.x;
+                                    curr_cockpit.y=cockpit.y;
+                                    
+                                    curr_cockpit.x-=velocityStep;
+                                    curr_cockpit.y+=(delta_y/delta_x)*velocityStep;
+                                
                                 }
-
+                                
                                 cockpit.x-=velocityStep;
                                 cockpit.y+=(delta_y/delta_x)*velocityStep;
 
-                                 tail.x-=velocityStep;
-                                 tail.y+=(delta_y/delta_x)*velocityStep;
+                                tail.x-=velocityStep;
+                                tail.y+=(delta_y/delta_x)*velocityStep;
 
-                                 wing1.x-=velocityStep;
-                                 wing1.y+=(delta_y/delta_x)*velocityStep;
+                                wing1.x-=velocityStep;
+                                wing1.y+=(delta_y/delta_x)*velocityStep;
 
-                                 wing2.x-=velocityStep;
-                                 wing2.y+=(delta_y/delta_x)*velocityStep;
+                                wing2.x-=velocityStep;
+                                wing2.y+=(delta_y/delta_x)*velocityStep;
+                                
+                                tailEnd.x-=velocityStep;
+                                tailEnd.y+=(delta_y/delta_x)*velocityStep;
                             }
                             else{
                                 
                                 System.out.println("#9");
-            
-                                if(cockpit.y-tail.y<=4){
-                                    velocityStep*=0.8;
-                                }
+                                
+                                
+                                curr_cockpit.y+=velocityStep;
+                                curr_cockpit.x-=(delta_x/delta_y)*velocityStep;
 
+                                while(Math.abs(curr_cockpit.x-cockpit.x)>changeLimit){
+                                    velocityStep*=cons;
+                                    
+                                    curr_cockpit.x=cockpit.x;
+                                    curr_cockpit.y=cockpit.y;
+                                    
+                                    curr_cockpit.y+=velocityStep;
+                                    curr_cockpit.x-=(delta_x/delta_y)*velocityStep;
+                                
+                                }
                                 cockpit.y+=velocityStep;
                                 cockpit.x-=(delta_x/delta_y)*velocityStep;
 
@@ -744,6 +818,9 @@ public class Shooter{
 
                                 wing2.y+=velocityStep;
                                 wing2.x-=(delta_x/delta_y)*velocityStep;
+                                
+                                tailEnd.y+=velocityStep;
+                                tailEnd.x-=(delta_x/delta_y)*velocityStep;
                             }
                         }
                         else               
@@ -755,6 +832,7 @@ public class Shooter{
                                 tail.x-=velocityStep;
                                 wing1.x-=velocityStep;
                                 wing2.x-=velocityStep;
+                                tailEnd.x-=velocityStep;
                             }
                             else{
                                 double delta_y=Math.abs(cockpit.y-tail.y);
@@ -764,10 +842,19 @@ public class Shooter{
                                     
                                     System.out.println("#11");
             
-                                    if(tail.x-cockpit.x<=7){
-                                        velocityStep*=0.8;
-                                    }
+                                    curr_cockpit.x-=velocityStep;
+                                    curr_cockpit.y-=(delta_y/delta_x)*velocityStep;
                                     
+                                    while(Math.abs(curr_cockpit.y-cockpit.y)>changeLimit){
+                                        velocityStep*=cons;
+                                        
+                                        curr_cockpit.x=cockpit.x;
+                                        curr_cockpit.y=cockpit.y;
+                                        
+                                        curr_cockpit.x-=velocityStep;
+                                        curr_cockpit.y-=(delta_y/delta_x)*velocityStep;
+                                    
+                                    }
                                     cockpit.x-=velocityStep;
                                     cockpit.y-=(delta_y/delta_x)*velocityStep;
 
@@ -779,13 +866,26 @@ public class Shooter{
 
                                      wing2.x-=velocityStep;
                                      wing2.y-=(delta_y/delta_x)*velocityStep;
+                                     
+                                     tailEnd.x-=velocityStep;
+                                     tailEnd.y-=(delta_y/delta_x)*velocityStep;
                                 }
                                 else{
                                     
                                     System.out.println("#12");
-            
-                                    if(tail.y-cockpit.y<=7){
-                                        velocityStep*=0.8;
+                                    
+                                    curr_cockpit.y-=velocityStep;
+                                    curr_cockpit.x-=(delta_x/delta_y)*velocityStep;
+
+                                    while(Math.abs(curr_cockpit.x-cockpit.x)>changeLimit){
+                                        velocityStep*=cons;
+                                        
+                                        curr_cockpit.x=cockpit.x;
+                                        curr_cockpit.y=cockpit.y;
+                                        
+                                        curr_cockpit.y-=velocityStep;
+                                        curr_cockpit.x-=(delta_x/delta_y)*velocityStep;
+                                    
                                     }
                                     
                                     cockpit.y-=velocityStep;
@@ -799,6 +899,9 @@ public class Shooter{
 
                                     wing2.y-=velocityStep;
                                     wing2.x-=(delta_x/delta_y)*velocityStep;
+                                    
+                                    tailEnd.y-=velocityStep;
+                                    tailEnd.x-=(delta_x/delta_y)*velocityStep;
                                 }
                             }
     }
