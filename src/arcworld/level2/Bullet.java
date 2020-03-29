@@ -26,6 +26,11 @@ public class Bullet {
             x=p.x;
             y=p.y;
         }
+
+        _Point(Shooter._Point tailEnd) {
+            x=tailEnd.x;
+            y=tailEnd.y;
+        }
     }
     static final int LENGTH=10;
     
@@ -44,9 +49,18 @@ public class Bullet {
         this.tail=new _Point(tail);
         this.g=g;
     }
+    public void drawBullet(){
+        g.setColor(Color.white);
+        drawLine(head,tail);
+    }
+    public void drawLine(_Point p1,_Point p2){
+        g.drawLine((int)p1.x,(int)p1.y,(int)p2.x,(int)p2.y);
+    }
     public void move(){
-        double step=2.5;
         
+        double step=2;
+        
+        double changeLimit=step;
         //Straight
         if(((int)head.x==(int)tail.x&&head.y<tail.y)){
             
@@ -63,25 +77,53 @@ public class Bullet {
                 if(delta_x<=delta_y){
             
                     System.out.println("#2");
-
-//                    if(head.x-tail.x<=4){
-//                        step*=0.7;
-//                    }
-
+                    
+                    
+                    _Point curr_head=new _Point(head);
+                    
+                    curr_head.x+=step;
+                    curr_head.y-=(delta_y/delta_x)*step;
+                    
+                    while(Math.abs(curr_head.y-head.y)>changeLimit){
+                        step*=0.95;
+                        curr_head.x=head.x;
+                        curr_head.y=head.y;
+                        
+                        curr_head.x+=step;
+                        curr_head.y-=(delta_y/delta_x)*step;
+                    
+                    }
+                    
                     head.x+=step;
                     head.y-=(delta_y/delta_x)*step;
                     
                     tail.x+=step;
                     tail.y-=(delta_y/delta_x)*step;
+                    
                 }
                 else{
                     
                     System.out.println("#3");
+            
                     
-//                    if(tail.y-head.y<=7){
-//                        step*=0.8;
-//                    }
+                    if(tail.y-head.y<=7){
+                        step*=0.8;
+                    }
+                    
+                    _Point curr_head=new _Point(head);
+                    curr_head.y-=step;
+                    curr_head.x+=(delta_x/delta_y)*step;
 
+                    while(Math.abs(curr_head.x-head.x)>changeLimit){
+                        step*=0.95;
+                        curr_head.y=head.y;
+                        curr_head.x=head.x;
+                        
+                        curr_head.y-=step;
+                        curr_head.x+=(delta_x/delta_y)*step;
+
+                    }
+                    
                     head.y-=step;
                     head.x+=(delta_x/delta_y)*step;
 
@@ -89,6 +131,7 @@ public class Bullet {
                     tail.x+=(delta_x/delta_y)*step;
 
                 }
+
             }
         else
             if (head.x>tail.x && (int)head.y==(int)tail.y) {
@@ -104,27 +147,50 @@ public class Bullet {
                     double delta_x=Math.abs(head.x-tail.x);
 
                     if(delta_x<=delta_y){
+                        
+                        
                        System.out.println("#5");
                        
-//                       if(head.x-tail.x<=7){
-//                           step*=0.8;
-//                       }
+                       _Point curr_head=new _Point(head);
                        
+                       curr_head.x+=step;
+                       curr_head.y+=(delta_y/delta_x)*step;
+                       
+                       while(Math.abs(curr_head.y-head.y)>changeLimit){
+                           step*=0.95;
+                           curr_head.x=head.x;
+                           curr_head.y=head.y;
+                           
+                           curr_head.x+=step;
+                           curr_head.y+=(delta_y/delta_x)*step;
+                       
+                           
+                       }
                        head.x+=step;
                        head.y+=(delta_y/delta_x)*step;
                        
-                        tail.x+=step;
-                        tail.y+=(delta_y/delta_x)*step;
+                       tail.x+=step;
+                       tail.y+=(delta_y/delta_x)*step;
 
                     }
                     else{
                         
                         System.out.println("#6");
                         
-//                        if(head.y-tail.y<=9){
-//                            step*=0.8;
-//                        }
-                
+                        _Point curr_head=new _Point(head);
+                        
+                        curr_head.y+=step;
+                        curr_head.x+=(delta_x/delta_y)*step;
+
+                        while(Math.abs(curr_head.x-head.x)>changeLimit){
+                            step*=0.95;
+                            curr_head.x=head.x;
+                            curr_head.y=head.y;
+                            
+                            curr_head.y+=step;
+                            curr_head.x+=(delta_x/delta_y)*step;
+
+                        }
                         head.y+=step;
                         head.x+=(delta_x/delta_y)*step;
 
@@ -150,26 +216,46 @@ public class Bullet {
                                 
                                 System.out.println("#8");
             
-//                                if(tail.x-head.x<=6){
-//                                    step*=0.8;
-//                                }
+                                _Point curr_head=new _Point(head);
+                                
+                                curr_head.x-=step;
+                                curr_head.y+=(delta_y/delta_x)*step;
 
+                                while(Math.abs(curr_head.y-head.y)>changeLimit){
+                                    step*=0.95;
+                                    
+                                    curr_head.x=head.x;
+                                    curr_head.y=head.y;
+                                    
+                                    curr_head.x-=step;
+                                    curr_head.y+=(delta_y/delta_x)*step;
+                                }
                                 head.x-=step;
                                 head.y+=(delta_y/delta_x)*step;
 
-                                 tail.x-=step;
-                                 tail.y+=(delta_y/delta_x)*step;
+                                tail.x-=step;
+                                tail.y+=(delta_y/delta_x)*step;
 
                             }
-                        
                             else{
                                 
                                 System.out.println("#9");
-            
-//                                if(head.y-tail.y<=4){
-//                                    step*=0.8;
-//                                }
-
+                                
+                                _Point curr_head=new _Point(head);
+                                
+                                curr_head.y+=step;
+                                curr_head.x-=(delta_x/delta_y)*step;
+                                
+                                while(Math.abs(curr_head.x-head.x)>changeLimit){
+                                    step*=0.95;
+                                    
+                                    curr_head.x=head.x;
+                                    curr_head.y=head.y;
+                                    
+                                    curr_head.y+=step;
+                                    curr_head.x-=(delta_x/delta_y)*step;
+                                
+                                }
                                 head.y+=step;
                                 head.x-=(delta_x/delta_y)*step;
 
@@ -193,26 +279,48 @@ public class Bullet {
                                 if(delta_x<=delta_y){
                                     
                                     System.out.println("#11");
-            
-//                                    if(tail.x-head.x<=7){
-//                                        step*=0.8;
-//                                    }
                                     
+                                    _Point curr_head=new _Point(head);
+                                    
+                                    curr_head.x-=step;
+                                    curr_head.y-=(delta_y/delta_x)*step;
+                                    
+                                    while(Math.abs(curr_head.y-head.y)>changeLimit){
+                                        step*=0.95;
+                                        
+                                        curr_head.x=head.x;
+                                        curr_head.y=head.y;
+                                        
+                                        curr_head.x-=step;
+                                        curr_head.y-=(delta_y/delta_x)*step;
+                                    
+                                    }
                                     head.x-=step;
                                     head.y-=(delta_y/delta_x)*step;
-
-                                     tail.x-=step;
-                                     tail.y-=(delta_y/delta_x)*step;
+                                    
+                                    tail.x-=step;
+                                    tail.y-=(delta_y/delta_x)*step;
 
                                 }
                                 else{
                                     
                                     System.out.println("#12");
             
-//                                    if(tail.y-head.y<=7){
-//                                        step*=0.8;
-//                                    }
+                                    _Point curr_head=new _Point(head);
                                     
+                                    curr_head.y-=step;
+                                    curr_head.x-=(delta_x/delta_y)*step;
+
+                                    while(Math.abs(curr_head.x-head.x)>changeLimit){
+                                        step*=0.95;
+                                        
+                                        curr_head.x=head.x;
+                                        curr_head.y=head.y;
+                                        
+                                        curr_head.y-=step;
+                                        curr_head.x-=(delta_x/delta_y)*step;
+
+                                    }
                                     head.y-=step;
                                     head.x-=(delta_x/delta_y)*step;
 
@@ -222,18 +330,9 @@ public class Bullet {
                                 }
                             }
     }
-    public void drawBullet(){
-        g.setColor(Color.white);
-        drawLine(head,tail);
-    }
-    public void drawLine(_Point p1,_Point p2){
-        g.drawLine((int)p1.x,(int)p1.y,(int)p2.x,(int)p2.y);
-    }
     //////////Main Method///////////
     public static void main(String[] args) {
         
     }
     
 }
-
-
