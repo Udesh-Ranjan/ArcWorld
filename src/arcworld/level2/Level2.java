@@ -10,7 +10,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import arcworld.level2.Bullet._Point;;
 import static arcworld.level2.Shooter.GRAVITY;
+import java.util.ArrayList;
 
 /**
  *
@@ -23,6 +25,8 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
     Astroid ast1,ast2,ast3;
     Shooter shooter;
     
+    ArrayList<Bullet>listBullet;
+    
     public Level2(JFrame frame) {
         this.setSize(frame.getSize());
         frame.addKeyListener(this);
@@ -31,8 +35,8 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
         ast1=new Astroid(Astroid.map.get(1), (Graphics2D) g, this, img,this.getWidth()/2,this.getHeight()/2);
         ast2=new Astroid(Astroid.map.get(1), (Graphics2D) g, this, img,this.getWidth()/2,this.getHeight()/2);
         ast3=new Astroid(Astroid.map.get(1), (Graphics2D) g, this, img,this.getWidth()/2,this.getHeight()/2);
-        
         shooter=new Shooter(new Shooter._Point(500,350),50, img, g);
+        listBullet=new ArrayList<>();
     }
 
     
@@ -459,7 +463,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                                         }
                                     }
             //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx//
-                                        
+            
         }
         
         if(e.getKeyCode()==KeyEvent.VK_UP){
@@ -468,7 +472,12 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
         }
         
         if(e.getKeyCode()==KeyEvent.VK_F){
-            //Create the Bullet
+            
+            Bullet bullet=null;
+            bullet=new Bullet(new Bullet._Point(shooter.cockpit.x,shooter.cockpit.y),new Bullet._Point(shooter.tail.x,shooter.tail.y),g);
+            synchronized(listBullet){
+                listBullet.add(bullet);
+            }
         }
     }   
     @Override
@@ -476,252 +485,52 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
         if(e.getKeyCode()==KeyEvent.VK_UP)
             shooter.upKey=false;
     }
-    public void move(){
+    
+    public void moveBullets(){
         
-        if(shooter.upKey){
-            shooter.velocityStep+=0.025;
-        }
-        else{
-            shooter.velocityStep*=GRAVITY;
-//            shooter.velocityStep=0;
-        }
-        
-        if(shooter.velocityStep>2.5){
-            shooter.velocityStep=2.5;
-        }
-        
-        //Straight
-        if(((int)shooter.cockpit.x==(int)shooter.tail.x&&shooter.cockpit.y<shooter.tail.y)){
+        synchronized(listBullet){
             
-            System.out.println("#1");
-            
-            shooter.cockpit.y-=shooter.velocityStep;
-            shooter.tail.y-=shooter.velocityStep;
-            shooter.wing1.y-=shooter.velocityStep;
-            shooter.wing2.y-=shooter.velocityStep;
-        }
-        else
-            if(shooter.cockpit.x>shooter.tail.x&&shooter.cockpit.y<shooter.tail.y){
-                double delta_y=Math.abs(shooter.cockpit.y-shooter.tail.y);
-                double delta_x=Math.abs(shooter.cockpit.x-shooter.tail.x);
+            for(int i=0;i<listBullet.size();i++){
+                Bullet bullet=listBullet.get(i);
                 
-                if(delta_x<=delta_y){
-            
-                    System.out.println("#2");
-
-                    if(shooter.cockpit.x-shooter.tail.x<=4){
-                        shooter.velocityStep*=0.7;
-                    }
-
-                    
-                    shooter.cockpit.x+=shooter.velocityStep;
-                    shooter.cockpit.y-=(delta_y/delta_x)*shooter.velocityStep;
-                    
-                    shooter.tail.x+=shooter.velocityStep;
-                    shooter.tail.y-=(delta_y/delta_x)*shooter.velocityStep;
-                    
-                    shooter.wing1.x+=shooter.velocityStep;
-                    shooter.wing1.y-=(delta_y/delta_x)*shooter.velocityStep;
-                    
-                    shooter.wing2.x+=shooter.velocityStep;
-                    shooter.wing2.y-=(delta_y/delta_x)*shooter.velocityStep;
-                    
+                if(bulletOutOfBound(bullet)){
+                    listBullet.remove(i);
+                    i--;
+                    continue;
                 }
-                else{
-                    
-                    System.out.println("#3");
-            
-                    
-                    if(shooter.tail.y-shooter.cockpit.y<=7){
-                        shooter.velocityStep*=0.8;
-                    }
-
-                    shooter.cockpit.y-=shooter.velocityStep;
-                    shooter.cockpit.x+=(delta_x/delta_y)*shooter.velocityStep;
-
-                    shooter.tail.y-=shooter.velocityStep;
-                    shooter.tail.x+=(delta_x/delta_y)*shooter.velocityStep;
-
-                    shooter.wing1.y-=shooter.velocityStep;
-                    shooter.wing1.x+=(delta_x/delta_y)*shooter.velocityStep;
-
-                    shooter.wing2.y-=shooter.velocityStep;
-                    shooter.wing2.x+=(delta_x/delta_y)*shooter.velocityStep;
-                }
-
+                bullet.move();
             }
-        else
-            if (shooter.cockpit.x>shooter.tail.x && (int)shooter.cockpit.y==(int)shooter.tail.y) {
-                
-                System.out.println("#4");
-            
-                shooter.cockpit.x+=shooter.velocityStep;
-                shooter.tail.x+=shooter.velocityStep;
-                shooter.wing1.x+=shooter.velocityStep;
-                shooter.wing2.x+=shooter.velocityStep;
+        }
+        
+    }
+    public void drawBullets(){
+        
+        synchronized(listBullet){
+            for(Bullet bullet:listBullet){
+            bullet.drawBullet();
             }
-            else
-                if(shooter.cockpit.y>shooter.tail.y && shooter.cockpit.x>shooter.tail.x){
-                    double delta_y=Math.abs(shooter.cockpit.y-shooter.tail.y);
-                    double delta_x=Math.abs(shooter.cockpit.x-shooter.tail.x);
-
-                    if(delta_x<=delta_y){
-                        
-                        
-                       System.out.println("#5");
-                       
-                       if(shooter.cockpit.x-shooter.tail.x<=7){
-                           shooter.velocityStep*=0.8;
-                       }
-                       
-                       
-                       
-                       shooter.cockpit.x+=shooter.velocityStep;
-                       shooter.cockpit.y+=(delta_y/delta_x)*shooter.velocityStep;
-                       
-                        shooter.tail.x+=shooter.velocityStep;
-                        shooter.tail.y+=(delta_y/delta_x)*shooter.velocityStep;
-
-                        shooter.wing1.x+=shooter.velocityStep;
-                        shooter.wing1.y+=(delta_y/delta_x)*shooter.velocityStep;
-
-                        shooter.wing2.x+=shooter.velocityStep;
-                        shooter.wing2.y+=(delta_y/delta_x)*shooter.velocityStep;
-                    }
-                    else{
-                        
-                        System.out.println("#6");
-                        
-                        if(shooter.cockpit.y-shooter.tail.y<=9){
-                            shooter.velocityStep*=0.8;
-                        }
-
-                    
-                        shooter.cockpit.y+=shooter.velocityStep;
-                        shooter.cockpit.x+=(delta_x/delta_y)*shooter.velocityStep;
-
-                        shooter.tail.y+=shooter.velocityStep;
-                        shooter.tail.x+=(delta_x/delta_y)*shooter.velocityStep;
-
-                        shooter.wing1.y+=shooter.velocityStep;
-                        shooter.wing1.x+=(delta_x/delta_y)*shooter.velocityStep;
-
-                        shooter.wing2.y+=shooter.velocityStep;
-                        shooter.wing2.x+=(delta_x/delta_y)*shooter.velocityStep;
-                    }
-                }
-                else
-                    if((int)shooter.cockpit.x==(int)shooter.tail.x && shooter.cockpit.y>shooter.tail.y){
-                        
-                        System.out.println("#7");
-            
-                        shooter.cockpit.y+=shooter.velocityStep;
-                        shooter.tail.y+=shooter.velocityStep;
-                        shooter.wing1.y+=shooter.velocityStep;
-                        shooter.wing2.y+=shooter.velocityStep;     
-                    }
-                    else
-                        if(shooter.cockpit.x<shooter.tail.x && shooter.cockpit.y>shooter.tail.y){
-                            double delta_y=Math.abs(shooter.cockpit.y-shooter.tail.y);
-                            double delta_x=Math.abs(shooter.cockpit.x-shooter.tail.x);
-                            
-                            if(delta_x<=delta_y){
-                                
-                                System.out.println("#8");
-            
-                                
-                                if(shooter.tail.x-shooter.cockpit.x<=6){
-                                    shooter.velocityStep*=0.8;
-                                }
-
-                                shooter.cockpit.x-=shooter.velocityStep;
-                                shooter.cockpit.y+=(delta_y/delta_x)*shooter.velocityStep;
-
-                                 shooter.tail.x-=shooter.velocityStep;
-                                 shooter.tail.y+=(delta_y/delta_x)*shooter.velocityStep;
-
-                                 shooter.wing1.x-=shooter.velocityStep;
-                                 shooter.wing1.y+=(delta_y/delta_x)*shooter.velocityStep;
-
-                                 shooter.wing2.x-=shooter.velocityStep;
-                                 shooter.wing2.y+=(delta_y/delta_x)*shooter.velocityStep;
-                            }
-                            else{
-                                
-                                System.out.println("#9");
-            
-                                if(shooter.cockpit.y-shooter.tail.y<=4){
-                                    shooter.velocityStep*=0.8;
-                                }
-
-                                shooter.cockpit.y+=shooter.velocityStep;
-                                shooter.cockpit.x-=(delta_x/delta_y)*shooter.velocityStep;
-
-                                shooter.tail.y+=shooter.velocityStep;
-                                shooter.tail.x-=(delta_x/delta_y)*shooter.velocityStep;
-
-                                shooter.wing1.y+=shooter.velocityStep;
-                                shooter.wing1.x-=(delta_x/delta_y)*shooter.velocityStep;
-
-                                shooter.wing2.y+=shooter.velocityStep;
-                                shooter.wing2.x-=(delta_x/delta_y)*shooter.velocityStep;
-                            }
-                        }
-                        else               
-                            if (shooter.cockpit.x<shooter.tail.x && (int)shooter.cockpit.y==(int)shooter.tail.y) {
-                                
-                                System.out.println("#10");
-            
-                                shooter.cockpit.x-=shooter.velocityStep;
-                                shooter.tail.x-=shooter.velocityStep;
-                                shooter.wing1.x-=shooter.velocityStep;
-                                shooter.wing2.x-=shooter.velocityStep;
-                            }
-                            else{
-                                double delta_y=Math.abs(shooter.cockpit.y-shooter.tail.y);
-                                double delta_x=Math.abs(shooter.cockpit.x-shooter.tail.x);
-
-                                if(delta_x<=delta_y){
-                                    
-                                    System.out.println("#11");
-            
-                                    if(shooter.tail.x-shooter.cockpit.x<=7){
-                                        shooter.velocityStep*=0.8;
-                                    }
-                                    
-                                    shooter.cockpit.x-=shooter.velocityStep;
-                                    shooter.cockpit.y-=(delta_y/delta_x)*shooter.velocityStep;
-
-                                     shooter.tail.x-=shooter.velocityStep;
-                                     shooter.tail.y-=(delta_y/delta_x)*shooter.velocityStep;
-
-                                     shooter.wing1.x-=shooter.velocityStep;
-                                     shooter.wing1.y-=(delta_y/delta_x)*shooter.velocityStep;
-
-                                     shooter.wing2.x-=shooter.velocityStep;
-                                     shooter.wing2.y-=(delta_y/delta_x)*shooter.velocityStep;
-                                }
-                                else{
-                                    
-                                    System.out.println("#12");
-            
-                                    if(shooter.tail.y-shooter.cockpit.y<=7){
-                                        shooter.velocityStep*=0.8;
-                                    }
-                                    
-                                    shooter.cockpit.y-=shooter.velocityStep;
-                                    shooter.cockpit.x-=(delta_x/delta_y)*shooter.velocityStep;
-
-                                    shooter.tail.y-=shooter.velocityStep;
-                                    shooter.tail.x-=(delta_x/delta_y)*shooter.velocityStep;
-
-                                    shooter.wing1.y-=shooter.velocityStep;
-                                    shooter.wing1.x-=(delta_x/delta_y)*shooter.velocityStep;
-
-                                    shooter.wing2.y-=shooter.velocityStep;
-                                    shooter.wing2.x-=(delta_x/delta_y)*shooter.velocityStep;
-                                }
-                            }
+        }
+    }
+    public boolean bulletOutOfBound(Bullet bullet){
+        int height=getHeight();
+        int width=getWidth();
+        
+        if(bullet.head.y<0 && bullet.tail.y<0){
+            return true;
+        }
+        if(bullet.head.x<0 && bullet.tail.x<0){
+            return true;
+        }
+        if(bullet.head.y>height && bullet.tail.y>height){
+            return true;
+        }
+        if(bullet.head.x>width && bullet.tail.x>width){
+            return true;
+        }
+        
+        
+        
+        return false;
     }
     @Override
     public void run() {
@@ -739,6 +548,9 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             
             shooter.move();
             shooter.drawShooter(g);
+            
+            moveBullets();
+            drawBullets();
             
             ///////Game Refresh Rate///////
             repaint();
