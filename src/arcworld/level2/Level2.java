@@ -644,6 +644,8 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
         }
     }
     public void dispose(){
+        this.removeAll();
+        this.removeKeyListener(this);
         img=null;
         g.dispose();
         ast1=ast2=ast3=null;
