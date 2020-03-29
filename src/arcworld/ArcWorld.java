@@ -2,6 +2,7 @@ package arcworld;
 
 import arcworld.level1.Level1;
 import arcworld.level1.WelcomeUser;
+import arcworld.level2.Level2;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -63,6 +64,24 @@ public class ArcWorld extends JFrame implements Runnable{
         } catch (InterruptedException ex) {
             Logger.getLogger(ArcWorld.class.getName()).log(Level.SEVERE, null, ex);
         }
+        this.remove(level1);
+        
+        
+        Level2 level2;
+        level2 = new Level2(this) {};
+        add(level2);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        t=new Thread(level2);
+        t.start();
+        
+        try {
+            t.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Level2.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        remove(level2);
+        level2.dispose();
+        
         System.out.println("Exiting The thread");
         ////////////Level2///////////
     }
