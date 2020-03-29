@@ -330,6 +330,14 @@ public class Astroid{
 
             return (count % 2 == 1); 
     }
+    public void dispose(){
+        img=null;
+        g=null;
+        points.clear();
+        points=null;
+        panel=null;
+        
+    }
     ///////Main Method///////
     public static void main(String $[]){
         

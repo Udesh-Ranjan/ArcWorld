@@ -534,6 +534,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                 Bullet bullet=listBullet.get(i);
                 
                 if(bulletOutOfBound(bullet)){
+                    listBullet.get(i).dispose();
                     listBullet.remove(i);
                     i--;
                     continue;
@@ -586,12 +587,14 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                             listAstroid.add(small);
                             }
                         }
+                        ast.dispose();
                         listAstroid.remove(j);
                         collision=true;
                         break;
                     }
                 }
                 if(collision){
+                    listBullet.get(i).dispose();
                     listBullet.remove(i);
                     i--;
                 }
@@ -639,6 +642,14 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                 Logger.getLogger(Level2.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    public void dispose(){
+        img=null;
+        g.dispose();
+        ast1=ast2=ast3=null;
+        map.clear();
+        map=null;
+        
     }
     //////////Main Method////////////
     public static void main(String[] args) {

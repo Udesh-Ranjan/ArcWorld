@@ -330,6 +330,11 @@ public class Bullet {
                                 }
                             }
     }
+    public void dispose(){
+        head=null;
+        tail=null;
+        g=null;
+    }
     //////////Main Method///////////
     public static void main(String[] args) {
         

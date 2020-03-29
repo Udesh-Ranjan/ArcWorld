@@ -444,4 +444,11 @@ public class Shooter{
                                 }
                             }
     }
+    public void dispose(){
+        img=null;
+        g=null;
+        cockpit=null;
+        tail=null;
+        wing1=wing2=null;
+    }
 }
