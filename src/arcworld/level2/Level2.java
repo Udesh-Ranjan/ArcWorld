@@ -34,7 +34,10 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
     
     HashMap<Astroid,Integer>map;
     
+    long firedTime;
+    
     public Level2(JFrame frame) {
+        firedTime=0;
         this.setSize(frame.getSize());
         frame.addKeyListener(this);
         img=new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
@@ -495,16 +498,25 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
         
         if(e.getKeyCode()==KeyEvent.VK_F){
             
-            Bullet bullet=null;
-//            bullet=new Bullet(new Bullet._Point(shooter.cockpit.x,shooter.cockpit.y),new Bullet._Point(shooter.tail.x,shooter.tail.y),g);
-            
-            double x=(shooter.cockpit.x+shooter.tail.x)/2;
-            double y=(shooter.cockpit.y+shooter.tail.y)/2;
-            
-            bullet=new Bullet(new Bullet._Point(shooter.cockpit.x,shooter.cockpit.y),new Bullet._Point(x,y),g);
-            
-            synchronized(listBullet){
-                listBullet.add(bullet);
+            boolean flag=true;
+            if(firedTime!=0){
+                long currTime=System.currentTimeMillis();
+                if(currTime-firedTime<200){
+                    flag=false;
+                }
+            }
+            if(flag){
+                firedTime=System.currentTimeMillis();
+                Bullet bullet=null;
+
+                double x=(shooter.cockpit.x+shooter.tail.x)/2;
+                double y=(shooter.cockpit.y+shooter.tail.y)/2;
+
+                bullet=new Bullet(new Bullet._Point(shooter.cockpit.x,shooter.cockpit.y),new Bullet._Point(x,y),g);
+
+                synchronized(listBullet){
+                    listBullet.add(bullet);
+                }
             }
         }
     }   
@@ -569,9 +581,9 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                     if(Astroid.isInside(ast.points,ast.points.size(),new Astroid._Point((int)bullet.head.x,(int)bullet.head.y)) || Astroid.isInside(ast.points,ast.points.size(),new Astroid._Point((int)bullet.tail.x,(int)bullet.tail.y))){
                         if(map.get(ast)!=null){
                             for(int k=0;k<2;k++){
-                                Astroid small=new Astroid(Astroid.map.get(2), (Graphics2D) g, this, img,this.getWidth()/2,this.getHeight()/2);
-                                small.enabled=true;
-                                listAstroid.add(small);
+                            Astroid small=new Astroid(Astroid.map.get(2), (Graphics2D) g, this, img,this.getWidth()/2,this.getHeight()/2);
+                            small.enabled=true;
+                            listAstroid.add(small);
                             }
                         }
                         listAstroid.remove(j);
