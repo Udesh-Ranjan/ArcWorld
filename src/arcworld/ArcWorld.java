@@ -1,8 +1,9 @@
 package arcworld;
 
 import arcworld.level1.Level1;
-import arcworld.level1.WelcomeUser;
+import arcworld.level1.WelcomeToLevel1;
 import arcworld.level2.Level2;
+import arcworld.level2.WelcomeToLevel2;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -39,17 +40,10 @@ public class ArcWorld extends JFrame implements Runnable{
         setForeground(Color.cyan);
         repaint();
         
-        WelcomeUser wel=new WelcomeUser(this);
-        add(wel);
-        wel.repaint();
-        Thread t=new Thread(wel);
-        t.start();
-        try {
-            t.join();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ArcWorld.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        wel.clear();
+        WelcomeToLevel1 welcome1=new WelcomeToLevel1(this);
+        this.add(welcome1);
+        welcome1.display("Level1",5000);
+        this.remove(welcome1);
         
         level1=new Level1(getWidth(),getHeight(),this,getForeground(),getBackground(),700);
         addKeyListener(level1);
@@ -57,7 +51,7 @@ public class ArcWorld extends JFrame implements Runnable{
         addWindowListener(level1);
         level1.setBounds(0, 0,getWidth(), getHeight());
         add(level1);
-        t=new Thread(level1);
+        Thread t=new Thread(level1);
         t.start();
         try {
             t.join();
@@ -66,6 +60,10 @@ public class ArcWorld extends JFrame implements Runnable{
         }
         this.remove(level1);
         
+        WelcomeToLevel2 welcome2=new WelcomeToLevel2(this);
+        this.add(welcome2);
+        welcome2.display("Level2",5000);
+        this.remove(welcome2);
         
         Level2 level2;
         level2 = new Level2(this) {};
