@@ -60,7 +60,7 @@ public class Shooter{
     /**
      *
      * @param cockpit front portion of the Jet.
-     * @param length  distance b/w the cockpit and centre of the wing.
+     * @param length  Vertical separation b/w tail.y & cockpit.y.
      */
     public Shooter(_Point cockpit,float length){
         this.cockpit=cockpit;
@@ -78,6 +78,14 @@ public class Shooter{
         drawShooter(g);
         
     }
+
+    /**
+     *
+     * @param cockpit   front portion of the Jet.
+     * @param length    Vertical separation b/w tail.y & cockpit.y. 
+     * @param img       BufferedImage.
+     * @param g         Graphics object for drawing on image.
+     */
     public Shooter(_Point cockpit,float length,BufferedImage img,Graphics g){
         this.cockpit=cockpit;
         this.length=length;
@@ -93,7 +101,6 @@ public class Shooter{
         drawShooter(g);
     }
     
-    
     public void drawShooter(Graphics g){
         g.setColor(Color.red);
         g.drawLine((int)cockpit.x,(int)cockpit.y,(int)tail.x, (int)tail.y);
@@ -107,15 +114,7 @@ public class Shooter{
         g.drawLine((int)wing2.x,(int)wing2.y,(int)cockpit.x, (int)cockpit.y);
                 
     }
-    /**
-     *
-     * @param p1    First _Point
-     * @param p2    Second _Point
-     * @return      Returns distance between p1 and p2
-     */
-    public double getDistance(_Point p1,_Point p2){
-        return Math.pow((p1.y-p2.y)*(p1.y-p2.y)+(p1.x-p2.x)*(p1.x-p2.x),0.5);
-    }
+    /////////Moves Shooter/////////
     public void move(){
         
         if(upKey){
@@ -150,7 +149,6 @@ public class Shooter{
                 if(delta_x<=delta_y){
             
                     System.out.println("#2");
-                    
                     
                     curr_cockpit.x+=velocityStep;
                     curr_cockpit.y-=(delta_y/delta_x)*velocityStep;
@@ -339,7 +337,6 @@ public class Shooter{
                                 
                                 System.out.println("#9");
                                 
-                                
                                 curr_cockpit.y+=velocityStep;
                                 curr_cockpit.x-=(delta_x/delta_y)*velocityStep;
 
@@ -443,7 +440,61 @@ public class Shooter{
                                     
                                 }
                             }
+        resetOrientaionOnOutofBound();
     }
+    /**
+     * reset the Shooter position if the Shooter has gone out of screen.
+    */
+    public void resetOrientaionOnOutofBound(){
+        int width=img.getWidth();
+        int height=img.getHeight();
+        
+        /////////////Top/////////////
+        if(cockpit.y<=0 && tail.y<=0){
+            double increaseHeight=height-tail.y;
+            cockpit.y+=increaseHeight;
+            tail.y+=increaseHeight;
+            wing1.y+=increaseHeight;
+            wing2.y+=increaseHeight;
+            
+        }
+        /////////////Bottom/////////////
+        if(cockpit.y>=height && tail.y>=height){
+            double decreaseHeight=cockpit.y-4;
+            cockpit.y-=decreaseHeight;
+            tail.y-=decreaseHeight;
+            wing1.y-=decreaseHeight;
+            wing2.y-=decreaseHeight;
+            
+        }
+        /////////////Right/////////////
+        if(cockpit.x>=width && tail.x>=width){
+            double decreaseWidth=cockpit.x-5;
+            cockpit.x-=decreaseWidth;
+            tail.x-=decreaseWidth;
+            wing1.x-=decreaseWidth;
+            wing2.x-=decreaseWidth;
+        }
+        /////////////Left/////////////
+        if(cockpit.x<=0 && tail.x<=0){
+            double increaseWidth=width-cockpit.x;
+            cockpit.x+=increaseWidth;
+            tail.x+=increaseWidth;
+            wing1.x+=increaseWidth;
+            wing2.x+=increaseWidth;
+        }
+    }
+
+    /**
+     *
+     * @param   p1 of type _Point
+     * @param   p2 of type _Point
+     * @return  returns distance b/w them.
+     */
+    public double getDistance(_Point p1,_Point p2){
+        return Math.pow((p1.y-p2.y)*(p1.y-p2.y)+(p1.x-p2.x)*(p1.x-p2.x),0.5);
+    }
+    /////////Dispose////////
     public void dispose(){
         img=null;
         g=null;
