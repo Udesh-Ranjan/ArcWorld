@@ -1,6 +1,7 @@
 package arcworld;
 
 import arcworld.level1.Level1;
+import arcworld.level1.Level1Sound;
 import arcworld.level1.WelcomeToLevel1;
 import arcworld.level2.Level2;
 import arcworld.level2.WelcomeToLevel2;
@@ -10,6 +11,7 @@ import java.awt.Graphics;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -40,9 +42,24 @@ public class ArcWorld extends JFrame implements Runnable{
         setForeground(Color.cyan);
         repaint();
         
+        Level1Sound sound=null;
+        try {
+            sound=new Level1Sound("src\\arcworld\\Level1.wav");
+            sound.playSound();
+        } catch (Exception ex) {
+            JOptionPane.showInputDialog(this,ex.toString());
+        }
+        
         WelcomeToLevel1 welcome1=new WelcomeToLevel1(this);
         this.add(welcome1);
         welcome1.display("Level1",5000);
+        
+        try {
+            Thread.sleep(5000);
+            sound.disposeSound();
+        } catch (Exception e) {
+        }
+        
         this.remove(welcome1);
         
         level1=new Level1(getWidth(),getHeight(),this,getForeground(),getBackground(),700);
