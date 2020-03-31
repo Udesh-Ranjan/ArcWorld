@@ -382,6 +382,8 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
                     debug.println(ex);
                 }
             }
+            if(astroids_destroyed>=200)
+                game_status=false;
         }
     }
     static void drawStringOnCenter(Graphics g,Font font,int left,int right,int height,String str){
