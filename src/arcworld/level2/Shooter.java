@@ -37,11 +37,16 @@ public class Shooter{
     _Point tail;
     _Point wing1;
     _Point wing2;
+    
+    _Point initialCokpit;                                                       //initialCockpit is used to rset the cockpit.
+    
     static int sleep=10;
     volatile double velocityStep;
     
     float length;
     float wingSeperation;
+    
+    boolean enabled=false;
     
     @Override
     public String toString(){
@@ -71,6 +76,8 @@ public class Shooter{
         wing1=new _Point(tail.x-wingSeperation*2,tail.y);
         wing2=new _Point(tail.x+wingSeperation*2,tail.y);
         
+        initialCokpit=new _Point(cockpit);
+        
         velocityStep=0;
         upKey=false;
         img=new BufferedImage(1000, 700, BufferedImage.TYPE_4BYTE_ABGR);
@@ -96,16 +103,22 @@ public class Shooter{
         wing1=new _Point(tail.x-wingSeperation*2,tail.y);
         wing2=new _Point(tail.x+wingSeperation*2,tail.y);
         
+        initialCokpit=new _Point(cockpit);
+        
         velocityStep=0;
         upKey=false;
         drawShooter(g);
     }
     
     public void drawShooter(Graphics g){
+        
         g.setColor(Color.red);
         g.drawLine((int)cockpit.x,(int)cockpit.y,(int)tail.x, (int)tail.y);
         
-        g.setColor(Color.white);
+        if(enabled)
+            g.setColor(Color.white);
+        else
+            g.setColor(Color.green);
         
         g.drawLine((int)wing1.x,(int)wing1.y,(int)tail.x, (int)tail.y);
         g.drawLine((int)wing1.x,(int)wing1.y,(int)cockpit.x, (int)cockpit.y);
@@ -114,8 +127,18 @@ public class Shooter{
         g.drawLine((int)wing2.x,(int)wing2.y,(int)cockpit.x, (int)cockpit.y);
                 
     }
+    /////////Reset the Cockpit///////
+    public void resetShooter(){
+        cockpit=new _Point(initialCokpit);
+        tail=new _Point(cockpit.x,cockpit.y+length);
+        wing1=new _Point(tail.x-wingSeperation*2,tail.y);
+        wing2=new _Point(tail.x+wingSeperation*2,tail.y);
+    }
     /////////Moves Shooter/////////
     public void move(){
+        
+        if(!enabled)
+            return;
         
         if(upKey){
             velocityStep+=0.1;
