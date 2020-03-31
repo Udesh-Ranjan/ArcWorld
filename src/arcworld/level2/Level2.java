@@ -527,7 +527,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             boolean flag=true;
             if(firedTime!=0){
                 long currTime=System.currentTimeMillis();
-                if(currTime-firedTime<200){
+                if(currTime-firedTime<250){
                     flag=false;
                 }
             }
