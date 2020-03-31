@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -50,10 +52,10 @@ public class WelcomeToLevel1 extends JPanel{
         
     }
     public void display(String msg,long time){
+        
         createImage();
         
         double delay=((double)time)/color.size();
-        
         for (Point color1 : color) {
             clearImage();
             g.setFont(pixelMplus);
@@ -69,6 +71,7 @@ public class WelcomeToLevel1 extends JPanel{
             }
         }
         dispose();
+        
     }
     public void createImage(){
         this.img=new BufferedImage(getWidth(),getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
@@ -98,7 +101,7 @@ public class WelcomeToLevel1 extends JPanel{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         wel.display("Level1",5000);
-
+        
     }
 
 }
