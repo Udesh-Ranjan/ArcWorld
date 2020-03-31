@@ -58,7 +58,7 @@ public class Bullet {
     }
     public void move(){
         
-        double step=2;
+        double step=4;
         
         double changeLimit=step;
         //Straight
