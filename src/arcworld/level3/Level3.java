@@ -3,9 +3,7 @@ package arcworld.level3;
 import arcworld.level3.Shooter._Point;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -35,15 +33,16 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
     Shooter shooter;
     
     ArrayList<Astroid>listAstroid;
+    ArrayList<Bullet>listBullet;
     
     public Level3(JFrame frame) {
         this.frame=frame;
         setSize(frame.size());
         img=new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_4BYTE_ABGR);
         g=img.createGraphics();
-        shooter=new Shooter(new _Point(400,600),-100,getWidth()-65,this);
+        shooter=new Shooter(new _Point(400,600),-100,getWidth()+80,this);
         listAstroid=new ArrayList<>();
-        
+        listBullet=new ArrayList<>();
     }
     
     @Override
@@ -68,6 +67,18 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
         if(e.getKeyCode()==KeyEvent.VK_RIGHT){
             shooter.setRightAccel(true);
         }
+        if(e.getKeyCode()==KeyEvent.VK_F){
+            Bullet bullet=new Bullet((int)((shooter.head.x+shooter.xLen/2)),(int)shooter.head.y-10+40,10, this);
+            synchronized(listBullet){
+                if(listBullet.size()!=0){
+                    if(!bullet.equalsConsideringSep(listBullet.get(listBullet.size()-1))){
+                        listBullet.add(bullet);
+                    }
+                }
+                else
+                    listBullet.add(bullet);
+            }
+        }
     }
 
     @Override
@@ -81,15 +92,18 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
     }
     public boolean wayClear(){
         int limit=50;
-        for(Astroid ast : listAstroid){
-            if(ast.gettopMostY()<limit)
-                return false;
+        synchronized(listAstroid){
+            for(Astroid ast : listAstroid){
+                if(ast.gettopMostY()<limit)
+                    return false;
+            }
         }
         return true;
     }
     public void createAstroids(){
         int num=rnd.nextInt(6);
-        for(int i=0;i<num;i++){
+        synchronized(listAstroid){
+            for(int i=0;i<num;i++){
             int sepX=rnd.nextInt(300)+10;
             int sepY=rnd.nextInt(130)+20;
             if(i==0){
@@ -103,19 +117,22 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
                 Astroid ast=Astroid.getRandomAstroid(prev.getrightMostX()+sepX, -sepY-100);
                 ast.setColor(Color.white);
                 listAstroid.add(ast);
+               }
             }
         }
     }
     public void moveAstroids(){
-        for(int i=0;i<listAstroid.size();i++){
-            Astroid ast=listAstroid.get(i);
-            if(checkAstroidOutOfBond(ast)){
-                ast.dispose();
-                listAstroid.remove(i);
-                i--;
-                continue;
+        synchronized(listAstroid){
+            for(int i=0;i<listAstroid.size();i++){
+                Astroid ast=listAstroid.get(i);
+                if(checkAstroidOutOfBond(ast)){
+                    ast.dispose();
+                    listAstroid.remove(i);
+                    i--;
+                    continue;
+                }
+                ast.fall();
             }
-            ast.fall();
         }
     }
     public void drawAstroids(){
@@ -134,6 +151,52 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
             return true;
         return false;
     }
+    public void moveBullets(){
+        
+        synchronized(listBullet){
+            synchronized(listAstroid){
+                for(int i=0;i<listBullet.size();i++){
+                    Bullet bullet=listBullet.get(i);
+                    if(bullet.bulletOutOfBound()){
+                        listBullet.remove(i);
+                        i--;
+                        continue;
+                    }
+                    boolean collision=false;
+                    for(int j=0;j<listAstroid.size();j++){
+                        Astroid ast=listAstroid.get(j);
+                        if(bulletCollisionWithAstroid(ast, bullet)){
+                            listAstroid.remove(j);
+                            ast.dispose();
+                            collision=true;
+                            break;
+                        }
+                    }
+
+                    if(collision){
+                        listBullet.remove(i);
+                        i--;
+                        continue;
+                    }
+                    bullet.move();
+                }
+            }
+        }
+    }
+    private static boolean bulletCollisionWithAstroid(Astroid ast,Bullet bullet){
+        if(bullet.startx >= ast.getLeftMostX() && bullet.startx <= ast.getrightMostX())
+            if(bullet.startx >= ast.getLeftMostX() && bullet.startx <= ast.getrightMostX())
+                if(Astroid.isInside(ast.points,ast.points.size(),new Point(bullet.startx,bullet.starty)))
+                    return true;
+                
+            
+        return false;
+    }
+    public void drawBullets(){
+        for(Bullet bullet: listBullet){
+            bullet.drawBullet(g);
+        }
+    }
     @Override
     public void run() {
         for(;;){
@@ -148,6 +211,9 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
             moveAstroids();
             drawAstroids();
             
+            moveBullets();
+            drawBullets();
+            
             repaint();
             
             try {
@@ -157,7 +223,6 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
             }
         }
     }
-
     public static void main(String[] args) {
         JFrame frame=new JFrame();
         frame.setSize(1000,700);
