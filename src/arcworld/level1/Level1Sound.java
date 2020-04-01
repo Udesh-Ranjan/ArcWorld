@@ -31,7 +31,7 @@ public class Level1Sound implements Runnable{
             clip.start();
         }
     }
-    public  void playSound(){
+    public void playSound(){
         Thread t=null;
         try{
             Level1Sound sound=new Level1Sound(filePath);
