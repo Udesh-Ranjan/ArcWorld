@@ -338,8 +338,4 @@ public class Astroid{
         panel=null;
         
     }
-    ///////Main Method///////
-    public static void main(String $[]){
-        
-    }
 }
