@@ -50,8 +50,9 @@ public class Shooter {
     public Shooter(_Point head,int leftLimit,int rightLimit,JPanel panel){
         this.panel=panel;
         this.head=head;
-        xLen=100;
-        yLen=50;
+        this.head.y=400;
+        xLen=250;
+        yLen=250;
         leftAccel=rightAccel=false;
         xVel=0;
         this.leftLimit=leftLimit;
