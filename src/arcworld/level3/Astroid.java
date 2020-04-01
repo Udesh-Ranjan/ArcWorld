@@ -22,8 +22,13 @@ public class Astroid {
     public static final Integer astroid4_coordinates[]={13 ,31 ,14 ,26 ,16 ,24 ,19 ,14 ,24 ,9 ,39 ,0 ,58 ,0 ,75 ,8 ,92 ,29 ,98 ,33 ,116 ,35 ,130 ,36 ,139 ,48 ,151 ,59 ,157 ,75 ,157 ,88 ,136 ,111 ,112 ,125 ,98 ,125 ,80 ,121 ,78 ,116 ,78 ,111 ,77 ,107 ,73 ,103 ,65 ,102 ,56 ,103 ,51 ,112 ,40 ,114 ,26 ,107 ,22 ,101 ,17 ,95 ,12 ,76 ,1 ,66 ,1 ,60 ,2 ,52 ,8 ,44 ,8 ,43 ,14 ,37 ,13 ,28};
     public static final Integer astroid5_coordinates[]={7 ,19 ,9 ,8 ,25 ,2 ,41 ,6 ,55 ,7 ,62 ,3 ,74 ,3 ,92 ,9 ,101 ,23 ,103 ,42 ,99 ,57 ,87 ,73 ,80 ,81 ,68 ,84 ,61 ,83 ,53 ,77 ,47 ,70 ,46 ,65 ,36 ,62 ,21 ,64 ,10 ,59 ,2 ,51 ,1 ,41 ,5 ,32 ,7 ,16};
 
-    public static HashMap<Integer,Integer[]>map;
-    private static Random rnd;
+    /**
+     *
+     */
+    public static final HashMap<Integer,Integer[]>map;
+    private static final Random rnd;
+    private static final int INF=1000;
+    
     static{
         rnd=new Random();
         map=new HashMap();
@@ -188,6 +193,81 @@ public class Astroid {
             y[i]=p.y;
         }
         g.fillPolygon(x, y,x.length);
+    }
+    static boolean onSegment(Point p, Point q, Point r){ 
+            if (q.x <= Math.max(p.x, r.x) && 
+                    q.x >= Math.min(p.x, r.x) && 
+                    q.y <= Math.max(p.y, r.y) && 
+                    q.y >= Math.min(p.y, r.y)){ 
+                    return true; 
+            } 
+            return false; 
+    } 
+
+    static int orientation(Point p, Point q, Point r){ 
+            int val = (q.y - p.y) * (r.x - q.x) 
+                            - (q.x - p.x) * (r.y - q.y); 
+
+            if (val == 0){ 
+                    return 0; // colinear 
+            } 
+            return (val > 0) ? 1 : 2; // clock or counterclock wise 
+    } 
+
+    static boolean doIntersect(Point p1, Point q1,Point p2, Point q2) { 
+            int o1 = orientation(p1, q1, p2); 
+            int o2 = orientation(p1, q1, q2); 
+            int o3 = orientation(p2, q2, p1); 
+            int o4 = orientation(p2, q2, q1); 
+
+            if (o1 != o2 && o3 != o4) { 
+                    return true; 
+            } 
+
+            if (o1 == 0 && onSegment(p1, p2, q1)) { 
+                    return true; 
+            } 
+
+            if (o2 == 0 && onSegment(p1, q2, q1)) { 
+                    return true; 
+            } 
+
+            if (o3 == 0 && onSegment(p2, p1, q2)) { 
+                    return true; 
+            } 
+
+            if (o4 == 0 && onSegment(p2, q1, q2)) { 
+                    return true; 
+            } 
+
+            return false; 
+    } 
+
+    static boolean isInside(ArrayList<Point>polygon, int n, Point p){ 
+            if (n < 3){ 
+                    return false; 
+            } 
+
+            Point extreme = new Point(INF, p.y); 
+
+            int count = 0, i = 0; 
+            do{ 
+                    int next = (i + 1) % n; 
+
+                    if (doIntersect(polygon.get(i), polygon.get(next), p, extreme)) 
+                    { 
+                            if (orientation(polygon.get(i), p, polygon.get(next)) == 0) 
+                            { 
+                                    return onSegment(polygon.get(i), p, 
+                                                                    polygon.get(next)); 
+                            } 
+
+                            count++; 
+                    } 
+                    i = next; 
+            } while (i != 0); 
+
+            return (count % 2 == 1); 
     }
     /**
      * When dispose is called the Astroid cannot be used again.
