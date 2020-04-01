@@ -76,12 +76,21 @@ public class ArcWorld extends JFrame implements Runnable{
             Logger.getLogger(ArcWorld.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.remove(level1);
-        
+        try {
+            sound=new Level1Sound("src\\arcworld\\Level2.wav");
+            sound.playSound();
+        } catch (Exception ex) {
+            JOptionPane.showInputDialog(this,ex.toString());
+        }
         WelcomeToLevel2 welcome2=new WelcomeToLevel2(this);
         this.add(welcome2);
         welcome2.display("Level2",5000);
         this.remove(welcome2);
-        
+        try {
+            Thread.sleep(5000);
+            sound.disposeSound();
+        } catch (Exception e) {
+        }
         Level2 level2;
         level2 = new Level2(this) {};
         add(level2);
@@ -98,6 +107,7 @@ public class ArcWorld extends JFrame implements Runnable{
         level2.dispose();
         
         System.out.println("Exiting The thread");
+        System.exit(0);
         ////////////Level2///////////
     }
     
