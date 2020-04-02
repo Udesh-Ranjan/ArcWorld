@@ -15,15 +15,13 @@ public class Bullet{
     
     static final int ySep=20;                                                    //Seperation b/w two bullets on same axis in pixels.
     static final int xSep=5;
-    static final int step=3;                                                    //Speed at which the bullet will move.
+    static int step=5;                                                    //Speed at which the bullet will move.
     
     int startx;
     int starty;
     int length;                         
     JPanel panel;
-    int power;
     Bullet(int x,int y,int len,JPanel panel){
-        power=25;
         startx=x;
         starty=y;
         length=len;
@@ -43,12 +41,6 @@ public class Bullet{
     public boolean equals(Bullet bullet){
         if(bullet==null)return false;
         return bullet.startx==startx&&bullet.starty==starty;
-    }
-    public void setPower(int pow){
-        power=pow;
-    }
-    public int getPower(){
-        return power;
     }
     /**
      * Returns boolean value based on the ySeparation b/w the bullets.
