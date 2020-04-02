@@ -39,6 +39,7 @@ public class Astroid {
     public ArrayList<Point>points;
     public int enduranceLimit;
     private int astType;
+    private int fall;
     public int point;
     private Point leftMost;
     private Point rightMost;
@@ -50,7 +51,8 @@ public class Astroid {
      */
     public Astroid(Integer arr[]) {
         enduranceLimit=50;
-        
+        point=10;
+        fall=1;
         points=new ArrayList<>(arr.length/2);
         for(int i=0;i<arr.length;i+=2){
             points.add(new Point(arr[i],arr[i+1]));
@@ -185,8 +187,14 @@ public class Astroid {
      */
     public void fall(){
         for(Point point : points){
-            point.y+=3;
+            point.y+=fall;
         }
+    }
+    public void setFall(int f){
+        fall=f;
+    }
+    public int getFall(){
+        return fall;
     }
     public void fillAstroid(Graphics g){
         
