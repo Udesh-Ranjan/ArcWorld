@@ -157,7 +157,7 @@ public class Shooter{
         //Straight
         if(((int)cockpit.x==(int)tail.x&&cockpit.y<tail.y)){
             
-            System.out.println("#1");
+            //System.out.println("#1");
             
             cockpit.y-=velocityStep;
             tail.y-=velocityStep;
@@ -171,7 +171,7 @@ public class Shooter{
                 
                 if(delta_x<=delta_y){
             
-                    System.out.println("#2");
+                    //System.out.println("#2");
                     
                     curr_cockpit.x+=velocityStep;
                     curr_cockpit.y-=(delta_y/delta_x)*velocityStep;
@@ -201,7 +201,7 @@ public class Shooter{
                 }
                 else{
                     
-                    System.out.println("#3");
+                    //System.out.println("#3");
             
                     curr_cockpit.y-=velocityStep;
                     curr_cockpit.x+=(delta_x/delta_y)*velocityStep;
@@ -235,7 +235,7 @@ public class Shooter{
         else
             if (cockpit.x>tail.x && (int)cockpit.y==(int)tail.y) {
                 
-                System.out.println("#4");
+                //System.out.println("#4");
             
                 cockpit.x+=velocityStep;
                 tail.x+=velocityStep;
@@ -250,7 +250,7 @@ public class Shooter{
                     if(delta_x<=delta_y){
                         
                         
-                       System.out.println("#5");
+                       //System.out.println("#5");
                        
                        curr_cockpit.x+=velocityStep;
                        curr_cockpit.y+=(delta_y/delta_x)*velocityStep;
@@ -281,7 +281,7 @@ public class Shooter{
                     }
                     else{
                         
-                        System.out.println("#6");
+                        //System.out.println("#6");
                         
                         curr_cockpit.y+=velocityStep;
                         curr_cockpit.x+=(delta_x/delta_y)*velocityStep;
@@ -313,7 +313,7 @@ public class Shooter{
                 else
                     if((int)cockpit.x==(int)tail.x && cockpit.y>tail.y){
                         
-                        System.out.println("#7");
+                        //System.out.println("#7");
             
                         cockpit.y+=velocityStep;
                         tail.y+=velocityStep;
@@ -327,7 +327,7 @@ public class Shooter{
                             
                             if(delta_x<=delta_y){
                                 
-                                System.out.println("#8");
+                                //System.out.println("#8");
                                 
                                 curr_cockpit.x-=velocityStep;
                                 curr_cockpit.y+=(delta_y/delta_x)*velocityStep;
@@ -358,7 +358,7 @@ public class Shooter{
                             }
                             else{
                                 
-                                System.out.println("#9");
+                                //System.out.println("#9");
                                 
                                 curr_cockpit.y+=velocityStep;
                                 curr_cockpit.x-=(delta_x/delta_y)*velocityStep;
@@ -390,7 +390,7 @@ public class Shooter{
                         else               
                             if (cockpit.x<tail.x && (int)cockpit.y==(int)tail.y) {
                                 
-                                System.out.println("#10");
+                                //System.out.println("#10");
             
                                 cockpit.x-=velocityStep;
                                 tail.x-=velocityStep;
@@ -403,7 +403,7 @@ public class Shooter{
 
                                 if(delta_x<=delta_y){
                                     
-                                    System.out.println("#11");
+                                    //System.out.println("#11");
             
                                     curr_cockpit.x-=velocityStep;
                                     curr_cockpit.y-=(delta_y/delta_x)*velocityStep;
@@ -433,7 +433,7 @@ public class Shooter{
                                 }
                                 else{
                                     
-                                    System.out.println("#12");
+                                    //System.out.println("#12");
                                     
                                     curr_cockpit.y-=velocityStep;
                                     curr_cockpit.x-=(delta_x/delta_y)*velocityStep;
