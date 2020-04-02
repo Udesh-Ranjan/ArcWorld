@@ -1,0 +1,14 @@
+Leve3
+-----
+    Astroid
+        Endurance field is to be added.
+        Color is to be added
+            Original color cyan
+            if Endurence is less color should be dark gray.
+            Destroying astroid with red color should create more astroid.
+        Fall speed is to be added.
+        Destroying some astroids should generate life or change the power of the shooter.
+    Level3
+        Right Status screen is to be added.
+            which will display score
+    Effects colliding with ice should freez the shooter.
