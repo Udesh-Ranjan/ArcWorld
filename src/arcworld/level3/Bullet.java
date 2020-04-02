@@ -20,6 +20,7 @@ public class Bullet{
     int starty;
     int length;                         
     JPanel panel;
+    int power;
     Bullet(int x,int y,int len,JPanel panel){
             startx=x;
             starty=y;
@@ -39,6 +40,12 @@ public class Bullet{
     public boolean equals(Bullet bullet){
         if(bullet==null)return false;
         return bullet.startx==startx&&bullet.starty==starty;
+    }
+    public void setPower(int pow){
+        power=pow;
+    }
+    public int getPower(){
+        return power;
     }
     /**
      * Returns boolean value based on the ySeparation b/w the bullets.
