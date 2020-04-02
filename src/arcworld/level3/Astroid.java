@@ -37,8 +37,6 @@ public class Astroid {
     }
     public Color color;
     public ArrayList<Point>points;
-    public int enduranceLimit;
-    private int astType;
     private int fall;
     public int point;
     private Point leftMost;
@@ -50,7 +48,6 @@ public class Astroid {
      * @param arr list of integer points where consecutive elements represents x & y respectively.
      */
     public Astroid(Integer arr[]) {
-        enduranceLimit=50;
         point=10;
         fall=1;
         points=new ArrayList<>(arr.length/2);
@@ -92,14 +89,7 @@ public class Astroid {
         
         int val=rnd.nextInt(5)+1;
         Astroid ast=new Astroid(map.get(val));
-        ast.astType=val;
         return ast;
-    }
-    public void setEnduranceLimit(int val){
-        enduranceLimit=val;
-    }
-    public int getEnduranceLimit(){
-        return enduranceLimit;
     }
     /**
      * Returns an Astroid with the left most x coordinate is leftX &
