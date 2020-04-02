@@ -40,8 +40,8 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
     
     boolean alive;
     int life;
-    long score;
-    
+    public int score;
+    public boolean finished;
     /**
      * @start   for Shooter starting.
      * @curr    for Shooter starting.
@@ -56,7 +56,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
         life=3;
         score=0;
         firedTime=0;
-        
+        finished=false;
         try {
             pixelMplus_20=Font.createFont(Font.TRUETYPE_FONT,new File("src\\arcworld\\PixelMplus10-Regular.ttf")).deriveFont(30f);
             GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(pixelMplus_20);
@@ -107,7 +107,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             double step=4.5;
             //      |
             if((int)shooter.cockpit.x==(int)shooter.tail.x && shooter.cockpit.y<shooter.tail.y){
-                System.out.println("Changing X");
+                //System.out.println("Changing X");
                 //Changing X
                 shooter.cockpit.x+=step;
                 double val=shooter.length*shooter.length-(shooter.cockpit.x-shooter.tail.x)*(shooter.cockpit.x-shooter.tail.x);
@@ -121,7 +121,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                     double delta_y=Math.abs(shooter.cockpit.y-shooter.tail.y);
                     
                     if(delta_x<=delta_y){
-                        System.out.println("Changing X");
+                        //System.out.println("Changing X");
                         //Changing X
                         shooter.cockpit.x+=step;
                         double val=shooter.length*shooter.length-(shooter.cockpit.x-shooter.tail.x)*(shooter.cockpit.x-shooter.tail.x);
@@ -131,7 +131,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                     }
                     else{
                         //Changing Y
-                        System.out.println("Changing Y");
+                        //System.out.println("Changing Y");
                         shooter.cockpit.y+=step;
                         double val=shooter.length*shooter.length-(shooter.cockpit.y-shooter.tail.y)*(shooter.cockpit.y-shooter.tail.y);
                         int sign=(val>=0?1:-1);
@@ -142,7 +142,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             else
                     if((int)shooter.cockpit.y==(int)shooter.tail.y && shooter.cockpit.x>shooter.tail.x){
                         //Changing Y
-                        System.out.println("Changing Y");
+                        //System.out.println("Changing Y");
                         shooter.cockpit.y+=step;
                         double val=shooter.length*shooter.length-(shooter.cockpit.y-shooter.tail.y)*(shooter.cockpit.y-shooter.tail.y);
                         int sign=(val>=0?1:-1);
@@ -156,7 +156,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                             
                             if(delta_x<=delta_y){
                                 //Changing X
-                                System.out.println("Changing X");
+                                //System.out.println("Changing X");
                                 shooter.cockpit.x-=step;
                                 double val=shooter.length*shooter.length-(shooter.cockpit.x-shooter.tail.x)*(shooter.cockpit.x-shooter.tail.x);
                                 int sign=(val>=0?1:-1);
@@ -165,7 +165,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                             }
                             else{
                                 //Changing Y
-                                System.out.println("Changing Y");
+                                //System.out.println("Changing Y");
                                 shooter.cockpit.y+=step;
                                 double val=shooter.length*shooter.length-(shooter.cockpit.y-shooter.tail.y)*(shooter.cockpit.y-shooter.tail.y);
                                 int sign=(val>=0?1:-1);
@@ -177,7 +177,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             else
                             if((int)shooter.cockpit.x==(int)shooter.tail.x && shooter.cockpit.y>shooter.tail.y){
                                 //Changing X
-                                System.out.println("Changing X");
+                                //System.out.println("Changing X");
                                 shooter.cockpit.x-=step;
                                 double val=shooter.length*shooter.length-(shooter.cockpit.x-shooter.tail.x)*(shooter.cockpit.x-shooter.tail.x);
                                 int sign=(val>=0?1:-1);
@@ -191,7 +191,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                                     
                                     if(delta_x <=delta_y){
                                         //Changing X
-                                        System.out.println("Changing X");
+                                        //System.out.println("Changing X");
                                         shooter.cockpit.x-=step;
                                         double val=shooter.length*shooter.length-(shooter.cockpit.x-shooter.tail.x)*(shooter.cockpit.x-shooter.tail.x);
                                         int sign=(val>=0?1:-1);
@@ -200,7 +200,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                                     }
                                     else{
                                         //Changing Y
-                                        System.out.println("Changing Y");
+                                        //System.out.println("Changing Y");
                                         shooter.cockpit.y-=step;
                                         double val=shooter.length*shooter.length-(shooter.cockpit.y-shooter.tail.y)*(shooter.cockpit.y-shooter.tail.y);
                                         int sign=(val>=0?1:-1);
@@ -211,7 +211,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             else
                                     if(shooter.cockpit.x<shooter.tail.x && (int)shooter.cockpit.y==(int)shooter.tail.y){
                                         //Changing Y
-                                        System.out.println("Changing Y");
+                                        //System.out.println("Changing Y");
                                         shooter.cockpit.y-=step;
                                         double val=shooter.length*shooter.length-(shooter.cockpit.y-shooter.tail.y)*(shooter.cockpit.y-shooter.tail.y);
                                         int sign=(val>=0?1:-1);
@@ -232,7 +232,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                                         }
                                         else{
                                             //Changing Y
-                                            System.out.println("Changing Y");
+                                            //System.out.println("Changing Y");
                                             shooter.cockpit.y-=step;
                                             double val=shooter.length*shooter.length-(shooter.cockpit.y-shooter.tail.y)*(shooter.cockpit.y-shooter.tail.y);
                                             int sign=(val>=0?1:-1);
@@ -243,7 +243,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx//
             
             if((int)shooter.wing1.x==(int)shooter.tail.x && shooter.wing1.y<shooter.tail.y){
-                System.out.println("Changing X");
+                //System.out.println("Changing X");
                 //Changing X
                 shooter.wing1.x+=step;
                 double val=shooter.length*shooter.length-(shooter.wing1.x-shooter.tail.x)*(shooter.wing1.x-shooter.tail.x);
@@ -257,7 +257,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                     double delta_y=Math.abs(shooter.wing1.y-shooter.tail.y);
                     
                     if(delta_x<=delta_y){
-                        System.out.println("Changing X");
+                        //System.out.println("Changing X");
                         //Changing X
                         shooter.wing1.x+=step;
                         double val=shooter.length*shooter.length-(shooter.wing1.x-shooter.tail.x)*(shooter.wing1.x-shooter.tail.x);
@@ -267,7 +267,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                     }
                     else{
                         //Changing Y
-                        System.out.println("Changing Y");
+                        //System.out.println("Changing Y");
                         shooter.wing1.y+=step;
                         double val=shooter.length*shooter.length-(shooter.wing1.y-shooter.tail.y)*(shooter.wing1.y-shooter.tail.y);
                         int sign=(val>=0?1:-1);
@@ -278,7 +278,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             else
                     if((int)shooter.wing1.y==(int)shooter.tail.y && shooter.wing1.x>shooter.tail.x){
                         //Changing Y
-                        System.out.println("Changing Y");
+                        //System.out.println("Changing Y");
                         shooter.wing1.y+=step;
                         double val=shooter.length*shooter.length-(shooter.wing1.y-shooter.tail.y)*(shooter.wing1.y-shooter.tail.y);
                         int sign=(val>=0?1:-1);
@@ -292,7 +292,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                             
                             if(delta_x<=delta_y){
                                 //Changing X
-                                System.out.println("Changing X");
+                                //System.out.println("Changing X");
                                 shooter.wing1.x-=step;
                                 double val=shooter.length*shooter.length-(shooter.wing1.x-shooter.tail.x)*(shooter.wing1.x-shooter.tail.x);
                                 int sign=(val>=0?1:-1);
@@ -301,7 +301,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                             }
                             else{
                                 //Changing Y
-                                System.out.println("Changing Y");
+                                //System.out.println("Changing Y");
                                 shooter.wing1.y+=step;
                                 double val=shooter.length*shooter.length-(shooter.wing1.y-shooter.tail.y)*(shooter.wing1.y-shooter.tail.y);
                                 int sign=(val>=0?1:-1);
@@ -313,7 +313,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             else
                             if((int)shooter.wing1.x==(int)shooter.tail.x && shooter.wing1.y>shooter.tail.y){
                                 //Changing X
-                                System.out.println("Changing X");
+                                //System.out.println("Changing X");
                                 shooter.wing1.x-=step;
                                 double val=shooter.length*shooter.length-(shooter.wing1.x-shooter.tail.x)*(shooter.wing1.x-shooter.tail.x);
                                 int sign=(val>=0?1:-1);
@@ -327,7 +327,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                                     
                                     if(delta_x <=delta_y){
                                         //Changing X
-                                        System.out.println("Changing X");
+                                        //System.out.println("Changing X");
                                         shooter.wing1.x-=step;
                                         double val=shooter.length*shooter.length-(shooter.wing1.x-shooter.tail.x)*(shooter.wing1.x-shooter.tail.x);
                                         int sign=(val>=0?1:-1);
@@ -336,7 +336,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                                     }
                                     else{
                                         //Changing Y
-                                        System.out.println("Changing Y");
+                                        //System.out.println("Changing Y");
                                         shooter.wing1.y-=step;
                                         double val=shooter.length*shooter.length-(shooter.wing1.y-shooter.tail.y)*(shooter.wing1.y-shooter.tail.y);
                                         int sign=(val>=0?1:-1);
@@ -347,7 +347,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             else
                                     if(shooter.wing1.x<shooter.tail.x && (int)shooter.wing1.y==(int)shooter.tail.y){
                                         //Changing Y
-                                        System.out.println("Changing Y");
+                                        //System.out.println("Changing Y");
                                         shooter.wing1.y-=step;
                                         double val=shooter.length*shooter.length-(shooter.wing1.y-shooter.tail.y)*(shooter.wing1.y-shooter.tail.y);
                                         int sign=(val>=0?1:-1);
@@ -368,7 +368,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                                         }
                                         else{
                                             //Changing Y
-                                            System.out.println("Changing Y");
+                                            //System.out.println("Changing Y");
                                             shooter.wing1.y-=step;
                                             double val=shooter.length*shooter.length-(shooter.wing1.y-shooter.tail.y)*(shooter.wing1.y-shooter.tail.y);
                                             int sign=(val>=0?1:-1);
@@ -380,7 +380,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx//
             
             if((int)shooter.wing2.x==(int)shooter.tail.x && shooter.wing2.y<shooter.tail.y){
-                System.out.println("Changing X");
+                //System.out.println("Changing X");
                 //Changing X
                 shooter.wing2.x+=step;
                 double val=shooter.length*shooter.length-(shooter.wing2.x-shooter.tail.x)*(shooter.wing2.x-shooter.tail.x);
@@ -394,7 +394,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                     double delta_y=Math.abs(shooter.wing2.y-shooter.tail.y);
                     
                     if(delta_x<=delta_y){
-                        System.out.println("Changing X");
+                        //System.out.println("Changing X");
                         //Changing X
                         shooter.wing2.x+=step;
                         double val=shooter.length*shooter.length-(shooter.wing2.x-shooter.tail.x)*(shooter.wing2.x-shooter.tail.x);
@@ -404,7 +404,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                     }
                     else{
                         //Changing Y
-                        System.out.println("Changing Y");
+                        //System.out.println("Changing Y");
                         shooter.wing2.y+=step;
                         double val=shooter.length*shooter.length-(shooter.wing2.y-shooter.tail.y)*(shooter.wing2.y-shooter.tail.y);
                         int sign=(val>=0?1:-1);
@@ -415,7 +415,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             else
                     if((int)shooter.wing2.y==(int)shooter.tail.y && shooter.wing2.x>shooter.tail.x){
                         //Changing Y
-                        System.out.println("Changing Y");
+                        //System.out.println("Changing Y");
                         shooter.wing2.y+=step;
                         double val=shooter.length*shooter.length-(shooter.wing2.y-shooter.tail.y)*(shooter.wing2.y-shooter.tail.y);
                         int sign=(val>=0?1:-1);
@@ -429,7 +429,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                             
                             if(delta_x<=delta_y){
                                 //Changing X
-                                System.out.println("Changing X");
+                                //System.out.println("Changing X");
                                 shooter.wing2.x-=step;
                                 double val=shooter.length*shooter.length-(shooter.wing2.x-shooter.tail.x)*(shooter.wing2.x-shooter.tail.x);
                                 int sign=(val>=0?1:-1);
@@ -438,7 +438,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                             }
                             else{
                                 //Changing Y
-                                System.out.println("Changing Y");
+                                //System.out.println("Changing Y");
                                 shooter.wing2.y+=step;
                                 double val=shooter.length*shooter.length-(shooter.wing2.y-shooter.tail.y)*(shooter.wing2.y-shooter.tail.y);
                                 int sign=(val>=0?1:-1);
@@ -450,7 +450,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             else
                             if((int)shooter.wing2.x==(int)shooter.tail.x && shooter.wing2.y>shooter.tail.y){
                                 //Changing X
-                                System.out.println("Changing X");
+                                //System.out.println("Changing X");
                                 shooter.wing2.x-=step;
                                 double val=shooter.length*shooter.length-(shooter.wing2.x-shooter.tail.x)*(shooter.wing2.x-shooter.tail.x);
                                 int sign=(val>=0?1:-1);
@@ -464,7 +464,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                                     
                                     if(delta_x <=delta_y){
                                         //Changing X
-                                        System.out.println("Changing X");
+                                        //System.out.println("Changing X");
                                         shooter.wing2.x-=step;
                                         double val=shooter.length*shooter.length-(shooter.wing2.x-shooter.tail.x)*(shooter.wing2.x-shooter.tail.x);
                                         int sign=(val>=0?1:-1);
@@ -473,7 +473,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                                     }
                                     else{
                                         //Changing Y
-                                        System.out.println("Changing Y");
+                                        //System.out.println("Changing Y");
                                         shooter.wing2.y-=step;
                                         double val=shooter.length*shooter.length-(shooter.wing2.y-shooter.tail.y)*(shooter.wing2.y-shooter.tail.y);
                                         int sign=(val>=0?1:-1);
@@ -484,7 +484,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             else
                                     if(shooter.wing2.x<shooter.tail.x && (int)shooter.wing2.y==(int)shooter.tail.y){
                                         //Changing Y
-                                        System.out.println("Changing Y");
+                                        //System.out.println("Changing Y");
                                         shooter.wing2.y-=step;
                                         double val=shooter.length*shooter.length-(shooter.wing2.y-shooter.tail.y)*(shooter.wing2.y-shooter.tail.y);
                                         int sign=(val>=0?1:-1);
@@ -505,7 +505,7 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
                                         }
                                         else{
                                             //Changing Y
-                                            System.out.println("Changing Y");
+                                            //System.out.println("Changing Y");
                                             shooter.wing2.y-=step;
                                             double val=shooter.length*shooter.length-(shooter.wing2.y-shooter.tail.y)*(shooter.wing2.y-shooter.tail.y);
                                             int sign=(val>=0?1:-1);
@@ -518,7 +518,6 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
         }
         
         if(e.getKeyCode()==KeyEvent.VK_UP){
-            
             shooter.upKey=true;
         }
         
@@ -786,6 +785,10 @@ public abstract class Level2 extends JPanel implements Runnable,KeyListener{
             }
             catch (InterruptedException ex) {
                 Logger.getLogger(Level2.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if(listAstroid.size()==0){
+                finished=true;
+                return;
             }
         }while(alive);
     }
