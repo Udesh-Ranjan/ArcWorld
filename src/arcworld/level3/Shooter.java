@@ -41,7 +41,7 @@ public class Shooter {
     boolean rightAccel;
     int leftLimit;
     int rightLimit;
-    
+    int power;
     Image shooterRest;
     Image shooterInMotion;
     JPanel panel;
@@ -57,6 +57,7 @@ public class Shooter {
         xVel=0;
         this.leftLimit=leftLimit;
         this.rightLimit=rightLimit;
+        power=25;
         shooterRest=Toolkit.getDefaultToolkit().getImage("C:\\Users\\Dev Parzival\\Pictures\\Shooter.jpg");
         
         shooterInMotion=Toolkit.getDefaultToolkit().getImage("C:\\Users\\Dev Parzival\\Pictures\\ShooterMotion.jpg");
@@ -100,5 +101,11 @@ public class Shooter {
             head.x=rightLimit-xLen;
         }
            
+    }
+    public void setPower(int pow){
+        power=pow;
+    }
+    public int getPower(){
+        return power;
     }
 }
