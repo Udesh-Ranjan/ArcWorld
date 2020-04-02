@@ -22,9 +22,6 @@ public class Astroid {
     public static final Integer astroid4_coordinates[]={13 ,31 ,14 ,26 ,16 ,24 ,19 ,14 ,24 ,9 ,39 ,0 ,58 ,0 ,75 ,8 ,92 ,29 ,98 ,33 ,116 ,35 ,130 ,36 ,139 ,48 ,151 ,59 ,157 ,75 ,157 ,88 ,136 ,111 ,112 ,125 ,98 ,125 ,80 ,121 ,78 ,116 ,78 ,111 ,77 ,107 ,73 ,103 ,65 ,102 ,56 ,103 ,51 ,112 ,40 ,114 ,26 ,107 ,22 ,101 ,17 ,95 ,12 ,76 ,1 ,66 ,1 ,60 ,2 ,52 ,8 ,44 ,8 ,43 ,14 ,37 ,13 ,28};
     public static final Integer astroid5_coordinates[]={7 ,19 ,9 ,8 ,25 ,2 ,41 ,6 ,55 ,7 ,62 ,3 ,74 ,3 ,92 ,9 ,101 ,23 ,103 ,42 ,99 ,57 ,87 ,73 ,80 ,81 ,68 ,84 ,61 ,83 ,53 ,77 ,47 ,70 ,46 ,65 ,36 ,62 ,21 ,64 ,10 ,59 ,2 ,51 ,1 ,41 ,5 ,32 ,7 ,16};
 
-    /**
-     *
-     */
     public static final HashMap<Integer,Integer[]>map;
     private static final Random rnd;
     private static final int INF=1000;
@@ -38,10 +35,11 @@ public class Astroid {
         map.put(4, astroid4_coordinates);
         map.put(5, astroid5_coordinates);
     }
-    private Color color;
+    public Color color;
     public ArrayList<Point>points;
     public int enduranceLimit;
     private int astType;
+    public int point;
     private Point leftMost;
     private Point rightMost;
     private Point topMost;
@@ -51,7 +49,8 @@ public class Astroid {
      * @param arr list of integer points where consecutive elements represents x & y respectively.
      */
     public Astroid(Integer arr[]) {
-        enduranceLimit=100;
+        enduranceLimit=50;
+        
         points=new ArrayList<>(arr.length/2);
         for(int i=0;i<arr.length;i+=2){
             points.add(new Point(arr[i],arr[i+1]));
@@ -186,7 +185,7 @@ public class Astroid {
      */
     public void fall(){
         for(Point point : points){
-            point.y++;
+            point.y+=3;
         }
     }
     public void fillAstroid(Graphics g){
