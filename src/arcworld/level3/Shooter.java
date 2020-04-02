@@ -58,9 +58,9 @@ public class Shooter {
         this.leftLimit=leftLimit;
         this.rightLimit=rightLimit;
         power=25;
-        shooterRest=Toolkit.getDefaultToolkit().getImage("C:\\Users\\Dev Parzival\\Pictures\\Shooter.jpg");
+        shooterRest=Toolkit.getDefaultToolkit().getImage("src\\arcworld\\Shooter.jpg");
         
-        shooterInMotion=Toolkit.getDefaultToolkit().getImage("C:\\Users\\Dev Parzival\\Pictures\\ShooterMotion.jpg");
+        shooterInMotion=Toolkit.getDefaultToolkit().getImage("src\\arcworld\\ShooterMotion.jpg");
     }
         
     public void drawShooter(Graphics g){
