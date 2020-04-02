@@ -270,38 +270,41 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
     }
     public void drawScore(){
         //LEVEL
-        g.setColor(Color.white);
+        g.setColor(Color.lightGray);
         g.setFont(pixelMplus_25);
         g.drawString("LEVEL",800, 50);
         
-        g.setColor(Color.yellow);
+        g.setColor(Color.white);
         g.setFont(pixelMplus_25);
         g.drawString(Integer.toString(level),900, 50);
         
         //WAVE
-        g.setColor(Color.white);
+        g.setColor(Color.lightGray);
         g.setFont(pixelMplus_25);
         g.drawString("WAVE",800, 100);
         
-        g.setColor(Color.yellow);
+        g.setColor(Color.white);
         g.setFont(pixelMplus_25);
         g.drawString(Integer.toString(wave),900, 100);
         
         //SCORE
-        g.setColor(Color.white);
+        g.setColor(Color.lightGray);
         g.setFont(pixelMplus_25);
         g.drawString("SCORE",800, 150);
         
-        g.setColor(Color.yellow);
+        g.setColor(Color.white);
         g.setFont(pixelMplus_25);
         g.drawString(Integer.toString(score),900, 150);
         
         //LIFE
-        g.setColor(Color.white);
+        g.setColor(Color.lightGray);
         g.setFont(pixelMplus_25);
         g.drawString("LIFE",800, 200);
         
-        g.setColor(Color.cyan);
+        if(currentLife<=200)
+            g.setColor(Color.red);
+        else
+        g.setColor(Color.yellow);
         g.fillRect(900,182,(int)(100*(currentLife/((float)originalLife))),20);
     }
     @Override
