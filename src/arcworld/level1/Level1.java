@@ -83,9 +83,9 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
     
     int level=1;
     int wave=1;
-    int astroids_destroyed=0;
+    public int astroids_destroyed=0;
     int life=3;
-    
+    public boolean finished;
     public Level1(int width,int height,JFrame frm,Color frnt,Color bck,int bod){
         
         try {
@@ -99,7 +99,7 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
             Logger.getLogger(Level1.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        
+        finished=false;
         border=bod+70;
         game_sound=new GameSound();
         frame=frm;
@@ -382,8 +382,10 @@ public class Level1 extends JPanel implements KeyListener,Runnable,WindowListene
                     debug.println(ex);
                 }
             }
-            if(astroids_destroyed>=200)
+            if(astroids_destroyed>=200){
                 game_status=false;
+                finished=true;
+            }
         }
     }
     static void drawStringOnCenter(Graphics g,Font font,int left,int right,int height,String str){
