@@ -64,7 +64,7 @@ public class Bullet {
         //Straight
         if(((int)head.x==(int)tail.x&&head.y<tail.y)){
             
-            System.out.println("#1");
+            //System.out.println("#1");
             
             head.y-=step;
             tail.y-=step;
@@ -76,7 +76,7 @@ public class Bullet {
                 
                 if(delta_x<=delta_y){
             
-                    System.out.println("#2");
+                    //System.out.println("#2");
                     
                     
                     _Point curr_head=new _Point(head);
@@ -103,7 +103,7 @@ public class Bullet {
                 }
                 else{
                     
-                    System.out.println("#3");
+                    //System.out.println("#3");
             
                     
                     if(tail.y-head.y<=7){
@@ -136,7 +136,7 @@ public class Bullet {
         else
             if (head.x>tail.x && (int)head.y==(int)tail.y) {
                 
-                System.out.println("#4");
+                //System.out.println("#4");
             
                 head.x+=step;
                 tail.x+=step;
@@ -149,7 +149,7 @@ public class Bullet {
                     if(delta_x<=delta_y){
                         
                         
-                       System.out.println("#5");
+                       //System.out.println("#5");
                        
                        _Point curr_head=new _Point(head);
                        
@@ -175,7 +175,7 @@ public class Bullet {
                     }
                     else{
                         
-                        System.out.println("#6");
+                        //System.out.println("#6");
                         
                         _Point curr_head=new _Point(head);
                         
@@ -202,7 +202,7 @@ public class Bullet {
                 else
                     if((int)head.x==(int)tail.x && head.y>tail.y){
                         
-                        System.out.println("#7");
+                        //System.out.println("#7");
             
                         head.y+=step;
                         tail.y+=step;
@@ -214,7 +214,7 @@ public class Bullet {
                             
                             if(delta_x<=delta_y){
                                 
-                                System.out.println("#8");
+                                //System.out.println("#8");
             
                                 _Point curr_head=new _Point(head);
                                 
@@ -239,7 +239,7 @@ public class Bullet {
                             }
                             else{
                                 
-                                System.out.println("#9");
+                                //System.out.println("#9");
                                 
                                 _Point curr_head=new _Point(head);
                                 
@@ -267,7 +267,7 @@ public class Bullet {
                         else               
                             if (head.x<tail.x && (int)head.y==(int)tail.y) {
                                 
-                                System.out.println("#10");
+                                //System.out.println("#10");
             
                                 head.x-=step;
                                 tail.x-=step;
@@ -278,7 +278,7 @@ public class Bullet {
 
                                 if(delta_x<=delta_y){
                                     
-                                    System.out.println("#11");
+                                    //System.out.println("#11");
                                     
                                     _Point curr_head=new _Point(head);
                                     
@@ -304,7 +304,7 @@ public class Bullet {
                                 }
                                 else{
                                     
-                                    System.out.println("#12");
+                                    //System.out.println("#12");
             
                                     _Point curr_head=new _Point(head);
                                     
