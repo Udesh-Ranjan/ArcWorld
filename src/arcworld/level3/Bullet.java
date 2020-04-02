@@ -22,10 +22,11 @@ public class Bullet{
     JPanel panel;
     int power;
     Bullet(int x,int y,int len,JPanel panel){
-            startx=x;
-            starty=y;
-            length=len;
-            this.panel=panel;
+        power=25;
+        startx=x;
+        starty=y;
+        length=len;
+        this.panel=panel;
     }
     void drawBullet(Graphics g){
             g.drawLine(startx,starty,startx,starty+length);
