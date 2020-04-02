@@ -7,6 +7,7 @@ package arcworld.level3;
  * @date   01-Apr-2020
  * @time   20:22:59
  */
+import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
@@ -29,6 +30,7 @@ public class Bullet{
         this.panel=panel;
     }
     void drawBullet(Graphics g){
+        g.setColor(Color.white);
             g.drawLine(startx,starty,startx,starty+length);
     }
 
