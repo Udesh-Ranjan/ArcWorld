@@ -100,9 +100,6 @@ public class Astroid {
     public int getEnduranceLimit(){
         return enduranceLimit;
     }
-    public void setColor(Color col){
-        color=col;
-    }
     /**
      * Returns an Astroid with the left most x coordinate is leftX &
      * top most y coordinate is topY.
