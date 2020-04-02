@@ -34,15 +34,26 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
     
     ArrayList<Astroid>listAstroid;
     ArrayList<Bullet>listBullet;
-    
+    /**********GAME STATUS*******/
+    int level;
+    int wave;
+    int score;
+    int astroidsDestroyed;
+    int enduranceLimit=50;
+    /****************************/
     public Level3(JFrame frame) {
         this.frame=frame;
         setSize(frame.size());
         img=new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_4BYTE_ABGR);
         g=img.createGraphics();
         shooter=new Shooter(new _Point(400,600),-100,getWidth()+80,this);
+        shooter.setPower(30);
         listAstroid=new ArrayList<>();
         listBullet=new ArrayList<>();
+        
+        level=3;
+        wave=1;
+        score=0;
     }
     
     @Override
@@ -72,11 +83,14 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
             synchronized(listBullet){
                 if(listBullet.size()!=0){
                     if(!bullet.equalsConsideringSep(listBullet.get(listBullet.size()-1))){
+                        bullet.setPower(shooter.getPower());
                         listBullet.add(bullet);
                     }
                 }
-                else
+                else{
+                    bullet.setPower(shooter.getPower());
                     listBullet.add(bullet);
+                }
             }
         }
     }
@@ -109,6 +123,7 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
             if(i==0){
                 Astroid ast=Astroid.getRandomAstroid(sepX, -sepY-100);
                 ast.setColor(Color.white);
+                ast.enduranceLimit=enduranceLimit;
                 listAstroid.add(ast);
             }
             else{
@@ -166,9 +181,24 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
                     for(int j=0;j<listAstroid.size();j++){
                         Astroid ast=listAstroid.get(j);
                         if(bulletCollisionWithAstroid(ast, bullet)){
+                            collision=true;
+                            ast.enduranceLimit-=bullet.power;
+                            if(ast.enduranceLimit>0){
+                                if(ast.enduranceLimit<=20 ){
+                                    ast.setColor(new Color(227, 216, 216));
+                                    break;
+                                }
+                                else
+                                    break;
+                            }
+                            astroidsDestroyed++;
+                            if(astroidsDestroyed%10==0){
+                                wave++;
+                                enduranceLimit+=10;
+                            }
+                            score+=ast.point;
                             listAstroid.remove(j);
                             ast.dispose();
-                            collision=true;
                             break;
                         }
                     }
@@ -183,6 +213,12 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
             }
         }
     }
+    /**
+     * The calling method must call this method inside synchronized block.
+     * @param ast       Astroid
+     * @param bullet    Bullet
+     * @return          If collision returns true else false
+     */
     private static boolean bulletCollisionWithAstroid(Astroid ast,Bullet bullet){
         if(bullet.startx >= ast.getLeftMostX() && bullet.startx <= ast.getrightMostX())
             if(bullet.startx >= ast.getLeftMostX() && bullet.startx <= ast.getrightMostX())
@@ -193,8 +229,10 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
         return false;
     }
     public void drawBullets(){
-        for(Bullet bullet: listBullet){
-            bullet.drawBullet(g);
+        synchronized(listBullet){
+            for(Bullet bullet: listBullet){
+                bullet.drawBullet(g);
+            }
         }
     }
     @Override
