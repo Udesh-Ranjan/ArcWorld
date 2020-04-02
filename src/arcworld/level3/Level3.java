@@ -2,16 +2,21 @@ package arcworld.level3;
 
 import arcworld.level3.Shooter._Point;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -39,8 +44,16 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
     int wave;
     int score;
     int astroidsDestroyed;
-    int enduranceLimit=50;
+    int enduranceLimit;
+    int originalLife;
+    int currentLife;
+    int astroidFall;
     /****************************/
+    
+    Font pixelMplus_20;
+    Font pixelMplus_25;
+    Font pixelMplus_15;
+    
     public Level3(JFrame frame) {
         this.frame=frame;
         setSize(frame.size());
@@ -54,6 +67,17 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
         level=3;
         wave=1;
         score=0;
+        astroidsDestroyed=0;
+        enduranceLimit=50;
+        currentLife=originalLife=400;
+        astroidFall=1;
+        try {
+            pixelMplus_20=Font.createFont(Font.TRUETYPE_FONT,new File("src\\arcworld\\PixelMplus10-Regular.ttf")).deriveFont(20f);
+            pixelMplus_25=Font.createFont(Font.TRUETYPE_FONT,new File("src\\arcworld\\PixelMplus10-Regular.ttf")).deriveFont(25f);
+            pixelMplus_15=Font.createFont(Font.TRUETYPE_FONT,new File("src\\arcworld\\PixelMplus10-Regular.ttf")).deriveFont(15f);
+        } catch (FontFormatException | IOException e) {
+            JOptionPane.showInputDialog(frame,e);
+        }
     }
     
     @Override
@@ -124,6 +148,7 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
                 Astroid ast=Astroid.getRandomAstroid(sepX, -sepY-100);
                 ast.setColor(Color.white);
                 ast.enduranceLimit=enduranceLimit;
+                ast.setFall(astroidFall);
                 listAstroid.add(ast);
             }
             else{
@@ -131,6 +156,8 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
                 Astroid prev=listAstroid.get(listAstroid.size()-1);
                 Astroid ast=Astroid.getRandomAstroid(prev.getrightMostX()+sepX, -sepY-100);
                 ast.setColor(Color.white);
+                ast.setFall(astroidFall);
+                ast.enduranceLimit=enduranceLimit;
                 listAstroid.add(ast);
                }
             }
@@ -141,6 +168,9 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
             for(int i=0;i<listAstroid.size();i++){
                 Astroid ast=listAstroid.get(i);
                 if(checkAstroidOutOfBond(ast)){
+                    currentLife-=10;
+
+                    System.out.println("Out of Bound "+currentLife);
                     ast.dispose();
                     listAstroid.remove(i);
                     i--;
@@ -162,7 +192,7 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
     }
     public boolean checkAstroidOutOfBond(Astroid ast){
         
-        if(ast.gettopMostY()>=getWidth())
+        if(ast.gettopMostY()>=getHeight())
             return true;
         return false;
     }
@@ -196,6 +226,9 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
                                 wave++;
                                 enduranceLimit+=10;
                             }
+                            if(astroidsDestroyed%20==0)
+                                astroidFall++;
+                            
                             score+=ast.point;
                             listAstroid.remove(j);
                             ast.dispose();
@@ -235,6 +268,42 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
             }
         }
     }
+    public void drawScore(){
+        //LEVEL
+        g.setColor(Color.white);
+        g.setFont(pixelMplus_25);
+        g.drawString("LEVEL",800, 50);
+        
+        g.setColor(Color.yellow);
+        g.setFont(pixelMplus_25);
+        g.drawString(Integer.toString(level),900, 50);
+        
+        //WAVE
+        g.setColor(Color.white);
+        g.setFont(pixelMplus_25);
+        g.drawString("WAVE",800, 100);
+        
+        g.setColor(Color.yellow);
+        g.setFont(pixelMplus_25);
+        g.drawString(Integer.toString(wave),900, 100);
+        
+        //SCORE
+        g.setColor(Color.white);
+        g.setFont(pixelMplus_25);
+        g.drawString("SCORE",800, 150);
+        
+        g.setColor(Color.yellow);
+        g.setFont(pixelMplus_25);
+        g.drawString(Integer.toString(score),900, 150);
+        
+        //LIFE
+        g.setColor(Color.white);
+        g.setFont(pixelMplus_25);
+        g.drawString("LIFE",800, 200);
+        
+        g.setColor(Color.cyan);
+        g.fillRect(900,182,(int)(100*(currentLife/((float)originalLife))),20);
+    }
     @Override
     public void run() {
         for(;;){
@@ -248,6 +317,8 @@ public class Level3 extends JPanel implements Runnable,KeyListener{
             
             moveAstroids();
             drawAstroids();
+
+            drawScore();
             
             moveBullets();
             drawBullets();
