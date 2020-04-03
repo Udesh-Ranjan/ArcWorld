@@ -1,2 +1,25 @@
-<h1>Head</h1>
-<img src="https://lh5.googleusercontent.com/TLBG9w3UQ1H1boC50JugubOioYCMEno_wV3Vf3Bj_EqZDOqIzrhJvLHsPDKrQQRxDJFzOo5XDK-3B9ttRYbUQ4k8WI30BAeuZu2vCRAW3ZXOtsER1g=w1280" alt="Level 3">
+<body>
+  <h1>
+    ARCWORLD
+  </h1>
+  <h2>LEVEL 1</h2>
+  <ol>
+    <li>Press F KEY to fire at the astroids.</li>
+    <li>Press RIGHT and LEFT KEYS to move towards right or left respectively.</li>
+    <li>Milk</li>
+  </ol>
+
+  <h2>LEVEL 2</h2>
+  <ol>
+    <li>Press F KEY to fire at the astroids.</li>
+    <li>Press UP KEY to move forward.</li>
+    <li>Press RIGHT KEY to rotate the ship in clockwise direction.</li>
+  </ol>
+  
+  <h2>LEVEL 3</h2>
+  <ol>
+    <li>Press F KEY to fire at the astroids.</li>
+    <li>Press RIGHT and LEFT KEYS to move towards right or left respectively.</li>
+    <li>This level is endless.</li>
+  </ol>
+</body>
